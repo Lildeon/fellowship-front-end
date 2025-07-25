@@ -9,6 +9,7 @@ import Delete from "@/component/Delete";
 import Avater from "@/component/Avater";
 import { Separator } from "@/components/ui/separator";
 import { poster } from "@/component/poster";
+import { LazyAutoPauseVideo } from "@/component/LazyPost";
 
 const Bookmark = () => {
   const user = localStorage.getItem("user");
@@ -79,7 +80,9 @@ const Bookmark = () => {
               </div>
               <div>
                 <Link to={`/view/${book.post?._id}`}>
-                  {book.post?.content && <p>{book.post?.content}</p>}
+                  {book.post?.content && (
+                    <p className="line-clamp-[10]">{book.post?.content}</p>
+                  )}
 
                   {book.post?.imageUrl && (
                     <div className="overflow-hidden">
@@ -92,16 +95,10 @@ const Bookmark = () => {
                   )}
                   {book.post?.videoUrl && (
                     <div>
-                      <video
-                        controls
-                        className="w-fit h-fit rounded-2xl"
-                        loading="lazy"
-                        autoPlay
-                        muted
+                      <LazyAutoPauseVideo
+                        src={book.post?.videoUrl}
                         poster={poster}
-                      >
-                        <source src={book.post?.videoUrl} type="video/mp4" />
-                      </video>
+                      />
                     </div>
                   )}
                 </Link>

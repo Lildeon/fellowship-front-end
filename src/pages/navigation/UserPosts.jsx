@@ -68,7 +68,9 @@ const UserPosts = () => {
               <div className="font-medium">{userPost.user.username}</div>
 
               <Link to={`/view/${userPost?._id}`}>
-                {userPost?.content && <p>{userPost?.content}</p>}
+                {userPost?.content && (
+                  <p className="line-clamp-[10]">{userPost?.content}</p>
+                )}
 
                 {userPost?.imageUrl && (
                   <div className="overflow-hidden">

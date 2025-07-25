@@ -78,9 +78,7 @@ const UserRepost = () => {
 
               <Link to={`/view/${repost.post?._id}`}>
                 {repost.post?.content && (
-                  <Link to={`/view/${repost.post?._id}`} className="">
-                    {repost.post?.content}
-                  </Link>
+                  <p className="line-clamp-[10]">{repost.post?.content}</p>
                 )}
 
                 {repost.post?.imageUrl && (

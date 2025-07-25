@@ -103,7 +103,7 @@ const Pagesposts = () => {
 
               <Link to={`/page-post/${post._id}`}>
                 {post?.content && (
-                  <p className="line-clamp-6">{post?.content}</p>
+                  <p className="line-clamp-[10]">{post?.content}</p>
                 )}
 
                 {post?.imageUrl && (

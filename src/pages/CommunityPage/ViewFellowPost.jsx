@@ -45,13 +45,7 @@ const ViewFellowPost = () => {
                 {post.fellowship?.name}
               </Link>
             </div>
-            <Link to={`/fellowship-post/${post?._id}`}>
-              {post?.content && (
-                <Link to={`/fellowship-post/${post?._id}`} className="">
-                  {post?.content}
-                </Link>
-              )}
-
+            <div>
               {post?.imageUrl && (
                 <div className="overflow-hidden">
                   <img
@@ -73,7 +67,8 @@ const ViewFellowPost = () => {
                   </video>
                 </div>
               )}
-            </Link>
+              {post?.content && <p>{post?.content}</p>}
+            </div>
             <div className="py-2 text-lg">
               {new Date(post.createdAt).toUTCString().slice(5, -7)}
             </div>

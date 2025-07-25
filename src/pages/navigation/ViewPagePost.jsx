@@ -59,13 +59,7 @@ const ViewPagePost = () => {
                 </div>
               </div>
             </Link>
-            <Link to={`/page-post/${post._id}`}>
-              {post?.content && (
-                <p to={`/page-post/${post._id}`} className="">
-                  {post?.content}
-                </p>
-              )}
-
+            <div>
               {post?.imageUrl && (
                 <div className="overflow-hidden py-5">
                   <img
@@ -87,7 +81,8 @@ const ViewPagePost = () => {
                   </video>
                 </div>
               )}
-            </Link>
+              {post?.content && <p>{post?.content}</p>}
+            </div>
             <div className="py-2">
               {new Date(post.createdAt).toUTCString().slice(5, -7)}
             </div>

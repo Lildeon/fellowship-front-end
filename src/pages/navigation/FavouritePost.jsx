@@ -92,7 +92,9 @@ const FavouritePost = () => {
               </div>
               <div>
                 <Link to={`/view/${favourite.post?._id}`}>
-                  {favourite.post?.content && <p>{favourite.post?.content}</p>}
+                  {favourite.post?.content && (
+                    <p className="line-clamp-[10]">{favourite.post?.content}</p>
+                  )}
 
                   {favourite.post?.imageUrl && (
                     <div className="overflow-hidden">

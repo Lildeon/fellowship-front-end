@@ -66,7 +66,9 @@ const FellowshipPost = () => {
             <div className="w-full flex flex-col">
               <div className="font-medium">{post.fellowship.name}</div>
               <Link to={`/fellowship-post/${post._id}`}>
-                {post?.content && <p>{post?.content}</p>}
+                {post?.content && (
+                  <p className="line-clamp-[10]">{post?.content}</p>
+                )}
 
                 {post?.imageUrl && (
                   <div className="overflow-hidden">

@@ -81,7 +81,9 @@ const Post = () => {
               </div>
 
               <Link to={`/view/${post?._id}`}>
-                {post?.content && <p>{post?.content}</p>}
+                {post?.content && (
+                  <p className="line-clamp-[10]">{post?.content}</p>
+                )}
 
                 {post?.imageUrl && (
                   <div className="overflow-hidden">

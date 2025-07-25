@@ -9,6 +9,7 @@ import Delete from "@/component/Delete";
 import Avater from "@/component/Avater";
 import { poster } from "@/component/poster";
 import { Separator } from "@/components/ui/separator";
+import { LazyAutoPauseVideo } from "@/component/LazyPost";
 
 const SaveCommunity = () => {
   const user = localStorage.getItem("user");
@@ -85,7 +86,9 @@ const SaveCommunity = () => {
               </div>
 
               <Link to={`/fellowship-post/${post.post?._id}`}>
-                {post.post?.content && <p>{post.post?.content}</p>}
+                {post.post?.content && (
+                  <p className="line-clamp-[10]">{post.post?.content}</p>
+                )}
 
                 {post.post?.imageUrl && (
                   <div className="overflow-hidden">
@@ -98,16 +101,10 @@ const SaveCommunity = () => {
                 )}
                 {post.post?.videoUrl && (
                   <div>
-                    <video
-                      controls
-                      className="w-fit h-fit rounded-2xl"
-                      loading="lazy"
-                      autoPlay
-                      muted
+                    <LazyAutoPauseVideo
+                      src={post.post?.videoUrl}
                       poster={poster}
-                    >
-                      <source src={post.post?.videoUrl} type="video/mp4" />
-                    </video>
+                    />
                   </div>
                 )}
               </Link>

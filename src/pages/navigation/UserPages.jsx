@@ -98,7 +98,9 @@ const UserPages = () => {
               </Link>
 
               <Link to={`/page-post/${page.post?._id}`}>
-                {page.post?.content && <p>{page.post?.content}</p>}
+                {page.post?.content && (
+                  <p className="line-clamp-[10]">{page.post?.content}</p>
+                )}
 
                 {page.post?.imageUrl && (
                   <div className="overflow-hidden">

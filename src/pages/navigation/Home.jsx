@@ -105,7 +105,9 @@ const Home = () => {
                 <Postmore postID={{ id: post._id }} onToggle={Toggle} />
               </div>
               <Link to={`/view/${post?._id}`}>
-                {post?.content && <p className="">{post?.content}</p>}
+                {post?.content && (
+                  <p className="line-clamp-[10]">{post?.content}</p>
+                )}
 
                 {post?.imageUrl && (
                   <div className="overflow-hidden">

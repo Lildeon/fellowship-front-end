@@ -45,7 +45,6 @@ const Viewpost = () => {
             </div>
 
             <div>
-              <p>{view.content}</p>
               {view?.imageUrl && (
                 <img
                   src={view?.imageUrl}
@@ -65,6 +64,7 @@ const Viewpost = () => {
                   <source src={view?.videoUrl} type="video/mp4" />
                 </video>
               )}
+              <p>{view?.content}</p>
             </div>
 
             <div className="pt-2">

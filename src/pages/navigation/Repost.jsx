@@ -85,7 +85,9 @@ const Repostuser = () => {
               </div>
 
               <Link to={`/view/${repost.post?._id}`}>
-                {repost.post?.content && <p>{repost.post?.content}</p>}
+                {repost.post?.content && (
+                  <p className="line-clamp-[10]">{repost.post?.content}</p>
+                )}
 
                 {repost.post?.imageUrl && (
                   <div className="overflow-hidden">
