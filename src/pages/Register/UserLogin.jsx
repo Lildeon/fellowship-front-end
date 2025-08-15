@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import {
   Card,
@@ -33,8 +33,8 @@ const UserLogin = () => {
   };
 
   return (
-    <div className="h-svh flex flex-col justify-center items-center">
-      <Card className="w-[350px]">
+    <div className="h-svh flex flex-col justify-center max-w-xs min-[500px]:max-w-sm m-auto">
+      <Card className="shrink">
         <CardHeader>
           <CardTitle className="text-2xl text-blue-700">Sign in here</CardTitle>
           <CardDescription></CardDescription>
@@ -42,7 +42,7 @@ const UserLogin = () => {
         <CardContent>
           <form
             action={handleSubmit}
-            className="flex flex-col gap-5 max-h-full "
+            className="flex flex-col gap-5 max-h-full"
           >
             <label>Email</label>
             <input
@@ -76,6 +76,12 @@ const UserLogin = () => {
             >
               Submit
             </button>
+            <Link
+              className="hover:underline text-blue-700"
+              to={"/forgot-password"}
+            >
+              Forgot Password
+            </Link>
           </form>
           <p className="text-red-600 font-medium">{server}</p>
         </CardContent>

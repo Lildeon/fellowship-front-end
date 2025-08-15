@@ -92,10 +92,12 @@ import ProtectedRoute from "./component/ProtectedRoute";
 import Allchurch from "./pages/navigation/Allchurch";
 import Allcommunity from "./pages/navigation/Allcommunity";
 import Allevent from "./pages/navigation/Allevent";
-import SetPassword from "./pages/navigation/SetPassword";
+import User from "./pages/navigation/User";
 import AboutFellowship from "./pages/navigation/AboutFellowship";
-import ResetPass from "./pages/Register/ResetPass";
 import ScrollToTop from "./component/ScrollToTop";
+import ForgotPassword from "./pages/Register/ForgotPassword";
+import ResetPassword from "./pages/Register/ResetPassword";
+import ChangePassword from "./pages/Register/ChangePassword";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -235,8 +237,9 @@ createRoot(document.getElementById("root")).render(
 
               <Route path="notification" element={<Notification />} />
               <Route path="settings" element={<Settings />}>
-                <Route path="account" element={<SetPassword />} />
+                <Route path="account" element={<User />} />
                 <Route path="about" element={<AboutFellowship />} />
+                <Route path="change-password" element={<ChangePassword />} />
               </Route>
             </Route>
           </Route>
@@ -245,7 +248,8 @@ createRoot(document.getElementById("root")).render(
             <Route path=":post" element={<Viewpost />} />
           </Route>
 
-          <Route path="reset-password" element={<ResetPass />} />
+          <Route path="reset-password/:token" element={<ResetPassword />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
 
           <Route path="/">
             <Route index element={<Account />} />

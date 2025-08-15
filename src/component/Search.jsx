@@ -2,16 +2,18 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import api from "@/services/axios";
 import Avater from "./Avater";
+import { useDebouncedCallback } from "use-debounce";
 
 const Search = () => {
   const [users, setUsers] = useState([]);
   const [username, setUsername] = useState(null);
+  const handleSearch = useDebouncedCallback(
+    (e) => setUsername(e.target.value),
+    300,
+  );
 
   useEffect(() => {
-    setTimeout(
-      api.get(`users?username=${username}`).then((res) => setUsers(res.data)),
-      10000,
-    );
+    api.get(`users?username=${username}`).then((res) => setUsers(res.data));
   }, [username]);
 
   return (
@@ -36,7 +38,7 @@ const Search = () => {
           name=""
           className="w-full p-2 rounded-3xl"
           placeholder="Search"
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={handleSearch}
         />
       </div>
 

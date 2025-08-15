@@ -32,14 +32,18 @@ const Page = () => {
           </div>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent className={"text-center"}>
-          <DropdownMenuLabel>Create Page</DropdownMenuLabel>
+        <DropdownMenuContent className={" font-medium"}>
+          <DropdownMenuLabel className="text-lg">Create Page</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
-            <Link to={"/church-profile"}>Create Church Page</Link>
+            <Link to={"/church-profile"} className="text-lg">
+              Church Page
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link to={"/branch-profile"}>Create Branch Page</Link>
+            <Link to={"/branch-profile"} className="text-lg">
+              Branch Page
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

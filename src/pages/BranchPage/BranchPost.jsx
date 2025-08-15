@@ -67,7 +67,8 @@ const BranchPost = () => {
           >
             <Avater src={post.branch?.coverPhotoUrl} alt="P" />
             <div className="w-full flex flex-col">
-              <div className="font-medium">{post.branch.name}</div>
+              <p className="font-medium">{post.branch.name}</p>
+              <p>{post.branch?.tag}</p>
               <Link to={`/page-post/${post._id}`}>
                 {post?.content && (
                   <p className="line-clamp-[10]">{post?.content}</p>

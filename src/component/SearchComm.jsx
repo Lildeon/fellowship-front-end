@@ -2,13 +2,17 @@ import api from "@/services/axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import Avater from "./Avater";
+import { useDebouncedCallback } from "use-debounce";
 
 // eslint-disable-next-line react/prop-types
 const SearchComm = ({ url }) => {
   const [pages, setPages] = useState([]);
   const [pagename, setPagename] = useState(null);
 
-  console.log(pages);
+  const handleSearch = useDebouncedCallback(
+    (e) => setPagename(e.target.value),
+    300,
+  );
   useEffect(() => {
     api.get(`${url}?pagename=${pagename}`).then((res) => setPages(res.data));
   }, [pagename, url]);
@@ -34,7 +38,7 @@ const SearchComm = ({ url }) => {
           name=""
           className="w-full p-2 rounded-3xl "
           placeholder="Search"
-          onChange={(e) => setPagename(e.target.value)}
+          onChange={handleSearch}
         />
       </div>
 

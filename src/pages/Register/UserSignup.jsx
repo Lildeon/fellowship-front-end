@@ -42,8 +42,8 @@ const UserSignup = () => {
   };
 
   return (
-    <div className="h-svh flex flex-col justify-center items-center">
-      <Card className="w-[350px]">
+    <div className="h-svh flex flex-col justify-center max-w-xs min-[500px]:max-w-sm m-auto">
+      <Card className="shrink">
         <CardHeader>
           <CardTitle className="text-2xl text-green-600">
             Register Here

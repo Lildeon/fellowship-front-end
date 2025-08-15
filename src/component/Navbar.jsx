@@ -155,7 +155,7 @@ const Navbar = ({ show, onToggle }) => {
           </div>
           <div className="flex flex-col gap-5 mb-10 pt-2">
             <NavLink
-              to={"/settings"}
+              to={"/settings/about"}
               className={({ isActive }) => (isActive ? active : inactive)}
               onClick={() => onToggle()}
             >

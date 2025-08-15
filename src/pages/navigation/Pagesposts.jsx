@@ -20,9 +20,7 @@ const Pagesposts = () => {
   const [totalPages, setTotalpages] = useState();
 
   const user = localStorage.getItem("user");
-  const filterPost = posts.filter(
-    (post) => post.branch !== null && post.church !== null,
-  );
+
   const [toggle, setToggle] = useState(false);
   const Toggle = () => setToggle(!toggle);
   console.log(posts);
@@ -64,8 +62,8 @@ const Pagesposts = () => {
           />
         </svg>
       </button>
-      {filterPost &&
-        filterPost.map((post) => (
+      {posts &&
+        posts.map((post) => (
           <div key={post._id} className="px-4 py-3 flex border-t border-r">
             <Link
               to={
@@ -90,11 +88,11 @@ const Pagesposts = () => {
                   }
                   className="self-start"
                 >
-                  <div className="text-lg font-medium">
+                  <p className="text-lg font-medium">
                     {post.branch?.name || post.church?.name}
-                  </div>
+                  </p>
 
-                  <div>{post.branch?.tag}</div>
+                  <p>{post.branch?.tag}</p>
                 </Link>
                 <div>
                   <Pagemore postId={`${post._id}`} />

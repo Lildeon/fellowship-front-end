@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Credential } from "./context";
+import api from "@/services/axios";
 
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
@@ -14,11 +15,12 @@ export const AuthProvider = ({ children }) => {
     }
   }, [toggle]);
 
-  const logout = () => {
+  const logout = async () => {
     localStorage.removeItem("user");
     localStorage.removeItem("currentPage");
     localStorage.removeItem("pageNumber");
     localStorage.removeItem("pageCount");
+    await api.post("/logout");
     setUser(null);
     setToggle(!toggle);
   };

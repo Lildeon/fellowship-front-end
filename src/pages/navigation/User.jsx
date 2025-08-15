@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import api from "@/services/axios";
+import DeleteUser from "@/component/DeleteUser";
 
-const SetPassword = () => {
+const User = () => {
   const userProfile = {
     fullname: "",
     username: "",
@@ -46,38 +47,40 @@ const SetPassword = () => {
 
   return (
     <div className="h-svh max-[500px]:pt-10 px-2">
-      <h1 className="font-medium">Update User</h1>
+      <h1 className="font-bold">Update User</h1>
 
-      <form
-        action={confirm}
-        className="flex flex-col gap-5 max-w-sm m-auto pb-5"
-      >
-        <label htmlFor="confirm">Current Password</label>
-        <div className="relative">
-          <input
-            id="confirm"
-            type={show ? "text" : "password"}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="type password here"
-            className="w-full"
-          />
-
-          <span
-            className="absolute top-3  right-3"
-            onClick={() => setShow(!show)}
-          >
-            {show ? <FaEyeSlash /> : <FaEye />}
-          </span>
-        </div>
-
-        <p className="text-red-500">{message}</p>
-        <button
-          type="submit"
-          className="bg-green-700 p-1 px-4 rounded-2xl w-fit"
+      {status !== 201 && (
+        <form
+          action={confirm}
+          className="flex flex-col gap-5 max-w-sm m-auto pb-5"
         >
-          Confirm
-        </button>
-      </form>
+          <label htmlFor="confirm">Current Password</label>
+          <div className="relative">
+            <input
+              id="confirm"
+              type={show ? "text" : "password"}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="type password here"
+              className="w-full"
+            />
+
+            <span
+              className="absolute top-3  right-3"
+              onClick={() => setShow(!show)}
+            >
+              {show ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+
+          <p className="text-red-500">{message}</p>
+          <button
+            type="submit"
+            className="bg-green-700 p-1 px-4 rounded-2xl w-fit"
+          >
+            Confirm
+          </button>
+        </form>
+      )}
       {status === 201 && (
         <form
           action={handleSubmit}
@@ -112,24 +115,7 @@ const SetPassword = () => {
             required={true}
             defaultValue={profile?.email}
           />
-          <label htmlFor="password"> Password</label>
-          <div className="relative">
-            <input
-              type={show ? "text" : "password"}
-              className="border p-1 rounded-2xl w-full"
-              onChange={(e) => handleChange(e)}
-              name="password"
-              placeholder="password"
-              required={true}
-              defaultValue={profile?.password}
-            />
-            <span
-              className="absolute top-3 right-3"
-              onClick={() => setShow(!show)}
-            >
-              {show ? <FaEyeSlash /> : <FaEye />}
-            </span>
-          </div>
+
           <p className="text-red-500">{text}</p>
           <button
             type="submit"
@@ -139,8 +125,13 @@ const SetPassword = () => {
           </button>
         </form>
       )}
+      {status === 201 && (
+        <div className="max-w-sm m-auto mt-10">
+          <DeleteUser />
+        </div>
+      )}
     </div>
   );
 };
 
-export default SetPassword;
+export default User;

@@ -63,7 +63,7 @@ const ChurchPage = () => {
                     <CreatePost Id={`${params.id}`} path="api/church-post" />
                   </div>
 
-                  <Livestream />
+                  {/* <Livestream /> */}
 
                   <div className="hidden min-[500px]:inline">
                     <EventForm

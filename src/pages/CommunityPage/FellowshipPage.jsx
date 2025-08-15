@@ -63,7 +63,7 @@ const FellowshipPage = () => {
                   <CreatePost Id={`${params.id}`} path="api/fellowship-post" />
                 </div>
 
-                <Livestream />
+                {/* <Livestream /> */}
 
                 <div className="hidden min-[500px]:inline">
                   <EventForm

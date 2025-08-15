@@ -92,9 +92,11 @@ const UserPages = () => {
                     ? `/view/branch/${page.branch?._id}/post`
                     : `/view/church/${page.church?._id}/post`
                 }
-                className="font-medium"
               >
-                {page.church?.name || page.branch?.tag}
+                <p className="font-medium block">
+                  {page.church?.name || page.branch?.name}
+                </p>
+                <p>{page.branch?.tag}</p>
               </Link>
 
               <Link to={`/page-post/${page.post?._id}`}>

@@ -14,8 +14,30 @@ import Loader from "./Loader";
 const CreatePost = ({ path, Id }) => {
   const [content, setContent] = useState("");
   const [file, setFile] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const loading = file.name?.length > 0 ? true : false;
+
+  const imageMaxSize = 5 * 1024 * 1024;
+  const videoMaxSize = 20 * 1024 * 1024;
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file.type.startsWith("image/") && file.size <= imageMaxSize) {
+      file.url = URL.createObjectURL(e.target.files[0]);
+      setFile(file);
+      setErrorMessage("");
+    } else if (file.type.startsWith("image/") && file.size > imageMaxSize) {
+      setErrorMessage(`${file.name} is more than 5Mb`);
+    }
+    if (file.type.startsWith("video/") && file.size <= videoMaxSize) {
+      file.url = URL.createObjectURL(e.target.files[0]);
+      setFile(file);
+      setErrorMessage("");
+    } else if (file.type.startsWith("video/") && file.size > videoMaxSize) {
+      setErrorMessage(`${file.name} is more than 20Mb`);
+    }
+  };
 
   const handleSubmit = async () => {
     const post = { content, file };
@@ -82,17 +104,14 @@ const CreatePost = ({ path, Id }) => {
               )}
             </div>
             <Loader loading={loading} />
+            <p>{errorMessage}</p>
 
             <div className="flex gap-5  items-center">
               <label className="flex gap-2">
                 <input
                   type="file"
                   className="hidden"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    file.url = URL.createObjectURL(e.target.files[0]);
-                    setFile(file);
-                  }}
+                  onChange={handleFileChange}
                   name="file"
                   accept="image/*, video/*"
                 />
@@ -114,11 +133,16 @@ const CreatePost = ({ path, Id }) => {
               </label>
 
               <div className="h-fit">
-                {file.name?.length > 0 && (
+                {(file.name?.length > 0 || errorMessage.length > 0) && (
                   <div className="flex gap-2 items-center">
                     {/* {file.type} */}
 
-                    <button onClick={() => setFile("")}>
+                    <button
+                      onClick={() => {
+                        setFile("");
+                        setErrorMessage("");
+                      }}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
