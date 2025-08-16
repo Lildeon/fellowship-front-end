@@ -33,7 +33,8 @@ const EditChurchProfile = ({ UserchurchProfile }) => {
   const handleChange = (e) =>
     setChurch({ ...church, [e.target.name]: e.target.value });
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const res = await api.put(`api/edit/church-profile/${id}`, church);
     res.status === 201 ? navigate("/explore/churches") : setText(res.data);
   };
@@ -66,7 +67,7 @@ const EditChurchProfile = ({ UserchurchProfile }) => {
         </DialogHeader>
 
         <div className="touch-auto overflow-auto h-full">
-          <form action={handleSubmit} className="flex flex-col gap-2 h-fit">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-2 h-fit">
             <label>Name of Church</label>
             <input
               type="text"

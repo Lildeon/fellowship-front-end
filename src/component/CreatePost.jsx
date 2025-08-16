@@ -39,7 +39,8 @@ const CreatePost = ({ path, Id }) => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const post = { content, file };
 
     await api.post(`${path}/${Id}`, post, {
@@ -79,7 +80,7 @@ const CreatePost = ({ path, Id }) => {
 
         <div className="touch-auto overflow-auto">
           <form
-            action={handleSubmit}
+            onSubmit={handleSubmit}
             className="flex flex-col gap-3 overflow-auto"
           >
             <textarea

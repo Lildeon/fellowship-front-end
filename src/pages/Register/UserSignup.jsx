@@ -29,7 +29,8 @@ const UserSignup = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const res = await axios.post(
       `http://localhost:8080/create-account`,
       profile,
@@ -51,7 +52,7 @@ const UserSignup = () => {
           <CardDescription>Create New Account</CardDescription>
         </CardHeader>
         <CardContent>
-          <form action={handleSubmit} className="flex flex-col gap-5">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <label>Fullname</label>
             <input
               type="text"

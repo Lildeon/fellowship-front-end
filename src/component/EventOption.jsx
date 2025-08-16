@@ -57,7 +57,8 @@ const EventOption = ({ eventId, url, event, urlDel, onToggle }) => {
 export default EventOption;
 
 const DelEvent = ({ eventId, url, onToggle }) => {
-  const handleDelete = async () => {
+  const handleDelete = async (e) => {
+    e.preventDefault();
     await api.delete(`${url}/${eventId}`);
     onToggle();
   };
@@ -111,7 +112,8 @@ const EditEvent = ({ eventId, url, event }) => {
   const handleEvent = (e) =>
     setEvents({ ...events, [e.target.name]: e.target.value });
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     await api.put(`${url}/${eventId}`, events);
   };
 
@@ -146,7 +148,7 @@ const EditEvent = ({ eventId, url, event }) => {
         </DialogHeader>
         <div className="pl-5 touch-auto overflow-auto h-auto">
           <form
-            action={handleSubmit}
+            onSubmit={handleSubmit}
             className="flex flex-col gap-5 max-w-md pt-5"
           >
             <label>Event Name</label>

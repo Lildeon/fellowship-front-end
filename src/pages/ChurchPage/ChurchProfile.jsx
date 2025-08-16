@@ -24,7 +24,8 @@ const ChurchProfile = () => {
   const handleChange = (e) =>
     setChurch({ ...church, [e.target.name]: e.target.value });
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const data = church;
     const res = await api.post(`api/create-church-profile/${user}`, data);
     if (res.status === 201) {
@@ -35,7 +36,7 @@ const ChurchProfile = () => {
 
   return (
     <div className="px-5 max-w-xl m-auto max-[500px]:pt-10">
-      <form action={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         {step === 1 && (
           <div className="flex flex-col gap-5">
             <label>Name of Church</label>

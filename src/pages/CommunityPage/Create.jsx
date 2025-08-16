@@ -26,7 +26,8 @@ const Create = () => {
   const handleChange = (e) =>
     setFellowship({ ...fellowship, [e.target.name]: e.target.value });
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const res = await api.post(
       `api/create-fellowship-page/${user}`,
       fellowship,
@@ -37,7 +38,7 @@ const Create = () => {
 
   return (
     <div className="px-5 max-w-lg m-auto max-[500px]:pt-10">
-      <form action={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         {step === 1 && (
           <div className="flex flex-col gap-5">
             <label>Name of Fellowship</label>

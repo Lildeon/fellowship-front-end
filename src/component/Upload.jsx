@@ -19,7 +19,8 @@ const Upload = ({ userPhoto, coverPhoto }) => {
   };
   const loading = photo.name?.length > 0 ? true : false;
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const formData = new FormData();
     if (selected === "profile") {
       formData.append("userPhoto", photo);
@@ -64,7 +65,7 @@ const Upload = ({ userPhoto, coverPhoto }) => {
           </svg>
         </PopoverTrigger>
         <PopoverContent className="w-fit p-3">
-          <form action={handleSubmit} className="flex flex-col gap-3 pb-3">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3 pb-3">
             <div className="flex gap-5">
               <label>
                 {selected === "profile" ? (

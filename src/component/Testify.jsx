@@ -16,7 +16,8 @@ const Testify = () => {
 
   let navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const post = { content };
     await api.post(`testify`, post);
     navigate("/home");
@@ -52,7 +53,7 @@ const Testify = () => {
           </DialogHeader>
 
           <form
-            action={handleSubmit}
+            onSubmit={handleSubmit}
             className="flex flex-col gap-5 overflow-auto"
           >
             <textarea

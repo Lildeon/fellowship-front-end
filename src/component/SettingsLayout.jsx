@@ -1,9 +1,9 @@
 import { Link, Outlet } from "react-router";
 import { Credential } from "@/context/context";
-import { use } from "react";
+import { useContext } from "react";
 
 const SettingsLayout = () => {
-  const { logout } = use(Credential);
+  const { logout } = useContext(Credential);
   return (
     <div className="flex">
       <div className="flex flex-col text-lg  font-medium border-r h-svh px-2 gap-y-3 min-[500px]:px-10 max-[500px]:pt-10">

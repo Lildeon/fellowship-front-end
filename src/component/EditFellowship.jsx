@@ -29,7 +29,8 @@ const EditFellowship = ({ fellowship }) => {
   const handleChange = (e) =>
     setBranch({ ...branch, [e.target.name]: e.target.value });
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const res = await api.put(`api/edit-fellowship/${id}`, branch);
     res.status === 201 ? navigate("/communities/explore") : setText(res.data);
   };
@@ -60,7 +61,7 @@ const EditFellowship = ({ fellowship }) => {
         </DialogHeader>
         <div className="touch-auto overflow-auto h-auto">
           <form
-            action={handleSubmit}
+            onSubmit={handleSubmit}
             className="flex flex-col gap-5 max-w-md pt-5"
           >
             <label>Name of Fellowship</label>

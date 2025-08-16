@@ -28,7 +28,8 @@ const BranchProfile = () => {
   const handleChange = (e) =>
     setBranch({ ...branch, [e.target.name]: e.target.value });
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (branch.name.length > 0) {
       const res = await api.post(`api/create-branch-profile/${user}`, branch);
       if (res.status === 201) {
@@ -40,7 +41,7 @@ const BranchProfile = () => {
   };
   return (
     <div className="px-5 max-w-lg m-auto max-[500px]:pt-10">
-      <form action={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         {step === 1 && (
           <div className="flex flex-col gap-5">
             <label>Name of Church</label>

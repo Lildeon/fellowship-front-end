@@ -17,7 +17,8 @@ const EventComment = ({ eventId, url }) => {
 
   let navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     await api.post(`${url}/${eventId}`, { content });
     setContent("");
     navigate("/home");
@@ -48,7 +49,7 @@ const EventComment = ({ eventId, url }) => {
           <DialogTitle>What is on your mind? </DialogTitle>
         </DialogHeader>
 
-        <form action={handleSubmit} className="flex flex-col gap-5">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <textarea
             name="content"
             cols={50}

@@ -14,7 +14,8 @@ import api from "@/services/axios";
 const Comment = ({ postID, url }) => {
   const [content, setContent] = useState("");
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const comment = { content };
     await api.post(`${url}/${postID}`, comment);
     setContent("");
@@ -46,7 +47,7 @@ const Comment = ({ postID, url }) => {
         </DialogHeader>
 
         <form
-          action={handleSubmit}
+          onSubmit={handleSubmit}
           className="flex flex-col gap-5 overflow-auto"
         >
           <textarea

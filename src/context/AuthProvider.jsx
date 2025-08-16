@@ -24,5 +24,9 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setToggle(!toggle);
   };
-  return <Credential value={{ user: user, logout }}>{children}</Credential>;
+  return (
+    <Credential.Provider value={{ user: user, logout }}>
+      {children}
+    </Credential.Provider>
+  );
 };

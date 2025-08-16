@@ -36,7 +36,8 @@ const EditBranchProfile = ({ UserbranchProfile }) => {
   const handleChange = (e) =>
     setBranch({ ...branch, [e.target.name]: e.target.value });
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const data = branch;
     const res = await api.put(`api/edit/branch-profile/${id}`, data);
     res.status === 201 ? navigate("/explore/branches") : setText(res.data);
@@ -70,7 +71,7 @@ const EditBranchProfile = ({ UserbranchProfile }) => {
         </DialogHeader>
         <div className="touch-auto overflow-auto h-full">
           <form
-            action={handleSubmit}
+            onSubmit={handleSubmit}
             className="flex flex-col gap-5 max-w-md pt-5"
           >
             <label>Name of Church </label>

@@ -18,13 +18,13 @@ const Remove = ({ postID, onToggle }) => {
   return (
     <Dialog>
       <DialogTrigger>
-        <div
+        <button
           type="button"
           className="hover:bg-yellow-400 hover:border-yellow-400 border px-5 rounded-2xl py-1"
           onClick={handleRemove}
         >
           Remove
-        </div>
+        </button>
       </DialogTrigger>
       <DialogContent className="w-fit rounded-3xl">
         <DialogHeader>

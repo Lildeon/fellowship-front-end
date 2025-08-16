@@ -45,7 +45,8 @@ const Post = () => {
       URL.revokeObjectURL(file.url);
     };
   }, [render, file.url]);
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const post = { content, file };
 
     await api.post(`post`, post, {
@@ -84,7 +85,7 @@ const Post = () => {
         </DialogHeader>
 
         <div className="">
-          <form action={handleSubmit} className="flex flex-col gap-3">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <textarea
               name="content"
               rows={6}

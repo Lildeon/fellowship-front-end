@@ -1,4 +1,4 @@
-import { use } from "react";
+import { useContext } from "react";
 import { Credential } from "@/context/context";
 import {
   AlertDialog,
@@ -10,10 +10,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import api from "@/services/axios";
 
 const Logout = () => {
-  const { logout } = use(Credential);
+  const { logout } = useContext(Credential);
   return (
     <AlertDialog>
       <AlertDialogTrigger>

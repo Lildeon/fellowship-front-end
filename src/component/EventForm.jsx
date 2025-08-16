@@ -22,7 +22,8 @@ const EventForm = ({ Id, eventpath }) => {
   const handleEvent = (e) =>
     setEvent({ ...event, [e.target.name]: e.target.value });
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     await api.post(`${eventpath}/${Id}`, event);
   };
 
@@ -52,7 +53,7 @@ const EventForm = ({ Id, eventpath }) => {
         </DialogHeader>
         <div className="touch-auto overflow-auto h-auto">
           <form
-            action={handleSubmit}
+            onSubmit={handleSubmit}
             className="flex flex-col gap-5 max-w-md pt-5"
           >
             <label>Event Name</label>

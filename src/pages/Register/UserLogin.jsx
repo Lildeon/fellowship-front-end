@@ -21,7 +21,8 @@ const UserLogin = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const formData = { password, email };
     const res = await api.post("login", formData);
 
@@ -41,7 +42,7 @@ const UserLogin = () => {
         </CardHeader>
         <CardContent>
           <form
-            action={handleSubmit}
+            onSubmit={handleSubmit}
             className="flex flex-col gap-5 max-h-full"
           >
             <label>Email</label>

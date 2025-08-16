@@ -35,7 +35,8 @@ const EditProfile = ({ myProfile }) => {
   const handleChange = (e) =>
     setProfile({ ...profile, [e.target.name]: e.target.value });
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     await api.put(`profile/edit`, profile);
 
     navigate("/profile/post");
@@ -55,7 +56,7 @@ const EditProfile = ({ myProfile }) => {
         </DialogHeader>
 
         <div className="touch-auto overflow-auto h-full">
-          <form action={handleSubmit} className="flex flex-col gap-5">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <label htmlFor="fullname">Full name</label>
             <input
               type="text"

@@ -7,7 +7,8 @@ const ChangePassword = () => {
   const [show, setShow] = useState(false);
   const [text, setText] = useState("");
   console.log(text);
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const res = await api.put("/change-password", { password, newPassword });
     setText(res.data.message);
     setNewPassword("");
@@ -15,7 +16,7 @@ const ChangePassword = () => {
   };
   return (
     <div className="max-w-sm m-auto max-[500px]:pt-10 px-1">
-      <form action={handleSubmit} className="flex flex-col gap-7">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-7">
         <label className="text-lg">Change Password</label>
         <div className="relative">
           <label htmlFor="password">Current Password</label>
