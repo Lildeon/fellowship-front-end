@@ -27,7 +27,7 @@ const Home = () => {
 
   const fetchMorePosts = async () => {
     const res = await api.get(
-      `/https://fellowship-backend.onrender.com/feed?page=${page}&limit=50`,
+      `https://fellowship-backend.onrender.com/feed?page=${page}&limit=50`,
     );
     const data = await res.data;
     setPosts([...data.posts]);
