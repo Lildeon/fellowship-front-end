@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import Pagemore from "@/component/PageMore";
+import Pagemore from "@/component/Pagemore";
 import Comment from "@/component/Comment";
 import LikePost from "@/component/LikePost";
 import Repost from "@/component/Repost";
