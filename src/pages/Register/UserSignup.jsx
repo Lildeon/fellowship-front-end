@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -12,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import api from "@/services/axios";
 
 const UserSignup = () => {
   const userProfile = {
@@ -31,7 +31,7 @@ const UserSignup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await axios.post(`/create-account`, profile);
+    const res = await api.post(`/create-account`, profile);
 
     if (res.status === 201) {
       navigate("/sign-in");
