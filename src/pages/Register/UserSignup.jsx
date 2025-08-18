@@ -31,10 +31,7 @@ const UserSignup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await axios.post(
-      `https://fellowship-backend.onrender.com/create-account`,
-      profile,
-    );
+    const res = await axios.post(`/create-account`, profile);
 
     if (res.status === 201) {
       navigate("/sign-in");

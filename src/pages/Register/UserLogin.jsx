@@ -26,10 +26,7 @@ const UserLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = { password, email };
-    const res = await api.post(
-      `https://fellowship.onrender.com/login`,
-      formData,
-    );
+    const res = await api.post(`/login`, formData);
 
     if (res.status === 201) {
       localStorage.setItem("user", res.data._id);
