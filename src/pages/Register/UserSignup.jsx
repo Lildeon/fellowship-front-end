@@ -32,7 +32,7 @@ const UserSignup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await axios.post(
-      `http://localhost:8080/create-account`,
+      `https://fellowship-backend.onrender.com/create-account`,
       profile,
     );
 
