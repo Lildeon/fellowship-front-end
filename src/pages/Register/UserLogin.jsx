@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import api from "@/services/axios";
+import axios from "axios";
 
 const UserLogin = () => {
   const [password, setpassword] = useState("");
@@ -26,7 +26,7 @@ const UserLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = { password, email };
-    const res = await api.post(
+    const res = await axios.post(
       `https://fellowship.onrender.com/login`,
       formData,
     );
