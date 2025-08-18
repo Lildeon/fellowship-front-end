@@ -29,7 +29,7 @@ const UserLogin = () => {
 
     if (res.status === 201) {
       localStorage.setItem("user", res.data._id);
-      navigate("/home");
+      navigate("https://fellowship-backend.onrender.com/home");
     }
     setServer(res.data.message);
   };
