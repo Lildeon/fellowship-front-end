@@ -1,3 +1,3 @@
-/sign-in    https://fellowship.onrender.com/login    200
-/sign-up    https://fellowship.onrender.com/create-account    200
+/signin    https://fellowship.onrender.com/login    200
+/signup    https://fellowship.onrender.com/create-account    200
 /*        /index.html    200
