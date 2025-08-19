@@ -11,7 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import api from "@/services/axios";
+
+import axios from "axios";
 
 const UserSignup = () => {
   const userProfile = {
@@ -31,7 +32,10 @@ const UserSignup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await api.post(`/create-account`, profile);
+    const res = await axios.post(
+      `https://fellowship-backend.onrender.com/create-account`,
+      profile,
+    );
 
     if (res.status === 201) {
       navigate("/sign-in");
