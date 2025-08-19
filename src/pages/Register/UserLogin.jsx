@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/card";
 
 import axios from "axios";
-import api from "@/services/axios";
 
 const UserLogin = () => {
   const [password, setpassword] = useState("");
@@ -27,7 +26,10 @@ const UserLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = { password, email };
-    const res = await api.post(`login`, formData);
+    const res = await axios.post(
+      `https://fellowship-backend.onrender.com/login`,
+      formData,
+    );
 
     if (res.status === 201) {
       localStorage.setItem("user", res.data._id);
