@@ -33,7 +33,7 @@ const UserLogin = () => {
 
     if (res.status === 201) {
       localStorage.setItem("user", res.data._id);
-      navigate("https://fellowships.netlify.app/home");
+      navigate("/home");
     }
     setServer(res.data.message);
   };
