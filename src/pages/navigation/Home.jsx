@@ -27,7 +27,9 @@ const Home = () => {
   const Toggle = () => setToggle(!toggle);
 
   const fetchMorePosts = async () => {
-    const res = await axios.get(`/feed?page=${page}&limit=50`);
+    const res = await axios.get(
+      `https//fellowship-backend.up.railway.app/feed?page=${page}&limit=50`,
+    );
     const data = await res.data;
     setPosts([...data.posts]);
     setTotalpages(data.totalPages);
