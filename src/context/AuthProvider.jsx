@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Credential } from "./context";
-import api from "@/services/axios";
+import axios from "axios";
 
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
@@ -20,7 +20,9 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("currentPage");
     localStorage.removeItem("pageNumber");
     localStorage.removeItem("pageCount");
-    await api.post("/logout");
+    await axios.post("https://fellowship-backend.up.railway.app/logout", {
+      withCredentials: true,
+    });
     setUser(null);
     setToggle(!toggle);
   };

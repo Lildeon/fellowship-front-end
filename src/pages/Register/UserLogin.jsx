@@ -27,8 +27,11 @@ const UserLogin = () => {
     e.preventDefault();
     const formData = { password, email };
     const res = await axios.post(
-      `https://fellowship-backend.up.railway.app/login`,
+      `https://fellowship-backend.up.railway.app`,
       formData,
+      {
+        withCredentials: true,
+      },
     );
 
     if (res.status === 201) {
