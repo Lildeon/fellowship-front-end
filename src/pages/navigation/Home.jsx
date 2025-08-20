@@ -10,6 +10,7 @@ import { poster } from "@/component/poster";
 import Avater from "@/component/Avater";
 import { Separator } from "@/components/ui/separator";
 import { LazyAutoPauseVideo } from "@/component/LazyPost";
+import axios from "axios";
 
 const Home = () => {
   const user = localStorage.getItem("user");
@@ -26,7 +27,7 @@ const Home = () => {
   const Toggle = () => setToggle(!toggle);
 
   const fetchMorePosts = async () => {
-    const res = await api.get(`/feed?page=${page}&limit=50`);
+    const res = await axios.get(`/feed?page=${page}&limit=50`);
     const data = await res.data;
     setPosts([...data.posts]);
     setTotalpages(data.totalPages);
