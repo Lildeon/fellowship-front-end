@@ -27,7 +27,7 @@ const UserLogin = () => {
     e.preventDefault();
     const formData = { password, email };
     const res = await axios.post(
-      `https://fellowship-backend.onrender.com/login`,
+      `https://fellowship-backend.up.railway.app/login`,
       formData,
     );
 

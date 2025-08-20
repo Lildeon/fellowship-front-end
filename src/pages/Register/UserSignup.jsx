@@ -33,7 +33,7 @@ const UserSignup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await axios.post(
-      `https://fellowship-backend.onrender.com/create-account`,
+      `https://fellowship-backend.up.railway.app/create-account`,
       profile,
     );
 
