@@ -24,7 +24,8 @@ const User = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const res = await api.put(`update-credential`, profile);
     if (res.status === 201) {
       navigate("/settings/about");
@@ -32,7 +33,8 @@ const User = () => {
     setText(res.data);
   };
 
-  const confirm = async () => {
+  const confirm = async (e) => {
+    e.preventDefault();
     const res = await api.post(`verify-password`, {
       password,
     });
@@ -51,7 +53,7 @@ const User = () => {
 
       {status !== 201 && (
         <form
-          action={confirm}
+          onSubmit={confirm}
           className="flex flex-col gap-5 max-w-sm m-auto pb-5"
         >
           <label htmlFor="confirm">Current Password</label>
@@ -83,7 +85,7 @@ const User = () => {
       )}
       {status === 201 && (
         <form
-          action={handleSubmit}
+          onSubmit={handleSubmit}
           className="flex flex-col gap-5 max-w-sm m-auto"
         >
           <label>Fullname</label>
