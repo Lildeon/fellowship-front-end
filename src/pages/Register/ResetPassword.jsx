@@ -21,7 +21,7 @@ function ResetPassword() {
   };
 
   return (
-    <div className="flex flex-col gap-5 m-auto max-w-sm">
+    <div className="flex flex-col gap-5 max-w-xs min-[500px]:max-w-sm m-auto">
       <h2 className="text-xl font-bold">Reset Password</h2>
       <form onSubmit={handleReset} className="flex flex-col gap-5">
         <input
