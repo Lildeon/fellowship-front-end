@@ -29,7 +29,7 @@ const CommunityHome = () => {
   const Toggle = () => setToggle(!toggle);
 
   const fetchMorePosts = async () => {
-    const res = await api.get(`/api/fellowship-home?page=${page}&limit=50`);
+    const res = await api.get(`/api/fellowship-home?page=${page}&limit=25`);
     const data = await res.data;
     setPosts(() => [...data.posts]);
     setTotalpages(data.totalPages);

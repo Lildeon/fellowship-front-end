@@ -26,7 +26,7 @@ const Pagesposts = () => {
   console.log(posts);
 
   const fetchMorePosts = async () => {
-    const res = await api.get(`/page-posts?page=${page}&limit=50`);
+    const res = await api.get(`/page-posts?page=${page}&limit=25`);
     const data = await res.data;
     setPosts(() => [...data.posts]);
     setTotalpages(data.totalPages);

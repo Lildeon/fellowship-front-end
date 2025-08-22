@@ -22,7 +22,7 @@ const ChurchPost = () => {
 
   const fetchMorePosts = async () => {
     const res = await api.get(
-      `/api/church-post/${church}?page=${page}&limit=50`,
+      `/api/church-post/${church}?page=${page}&limit=25`,
     );
     const data = await res.data;
     setPosts(() => [...data.posts]);

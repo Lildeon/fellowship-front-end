@@ -19,14 +19,14 @@ const Home = () => {
     const storedPage = localStorage.getItem("currentPage");
     return storedPage ? parseInt(storedPage, 10) : 1;
   });
-  console.log(posts);
+
   const [totalPages, setTotalpages] = useState();
   const [toggle, setToggle] = useState(false);
 
   const Toggle = () => setToggle(!toggle);
 
   const fetchMorePosts = async () => {
-    const res = await api.get(`/feed?page=${page}&limit=50`);
+    const res = await api.get(`/feed?page=${page}&limit=25`);
     const data = await res.data;
     setPosts([...data.posts]);
     setTotalpages(data.totalPages);
@@ -35,22 +35,6 @@ const Home = () => {
   useEffect(() => {
     fetchMorePosts();
     localStorage.setItem("currentPage", page);
-
-    // const handleScroll = () => {
-    //   const reachedBottom =
-    //     window.innerHeight + window.scrollY >=
-    //     document.documentElement.scrollHeight - 10;
-
-    //   if (reachedBottom) {
-    //     setPage((prev) => prev + 1);
-    //     if (page === totalPages) {
-    //       setPage(page);
-    //     }
-    //   }
-    // };
-
-    // window.addEventListener("scroll", handleScroll);
-    // return () => window.removeEventListener("scroll", handleScroll);
   }, [toggle, page]);
 
   return (

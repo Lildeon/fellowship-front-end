@@ -25,7 +25,7 @@ const UserRepost = () => {
   const Toggle = () => setToggle(!toggle);
 
   const fetchMorePosts = async () => {
-    const res = await api.get(`/user-repost/${id}?page=${page}&limit=50`);
+    const res = await api.get(`/user-repost/${id}?page=${page}&limit=25`);
     const data = await res.data;
     setReposts([...data.posts]);
     setTotalpages(data.totalPages);

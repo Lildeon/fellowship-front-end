@@ -24,7 +24,7 @@ const Bookmark = () => {
   console.log(bookmark);
 
   const fetchMorePosts = async () => {
-    const res = await api.get(`/bookmark?page=${page}&limit=50`);
+    const res = await api.get(`/bookmark?page=${page}&limit=25`);
     const data = await res.data;
     setBookmark([...data.posts]);
   };

@@ -23,7 +23,7 @@ const FavouritePost = () => {
   const Toggle = () => setToggle(!toggle);
   console.log(favourites);
   const fetchMorePosts = async () => {
-    const res = await api.get(`/favourite?page=${page}&limit=50`);
+    const res = await api.get(`/favourite?page=${page}&limit=25`);
     const data = await res.data;
     setFavourite([...data.posts]);
   };

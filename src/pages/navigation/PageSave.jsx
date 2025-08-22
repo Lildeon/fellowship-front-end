@@ -25,7 +25,7 @@ const PageSave = () => {
   const Toggle = () => setToggle(!toggle);
 
   const fetchMorePosts = async () => {
-    const res = await api.get(`/saved-pages?page=${page}&limit=50`);
+    const res = await api.get(`/saved-pages?page=${page}&limit=25`);
     const data = await res.data;
     setPages(() => [...data.posts]);
     setTotalPosts(data.totalPosts);

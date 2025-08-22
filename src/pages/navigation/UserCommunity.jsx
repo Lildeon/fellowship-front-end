@@ -26,7 +26,7 @@ const UserCommunity = () => {
 
   const fetchMorePosts = async () => {
     const res = await api.get(
-      `/user-community-repost/${id}?page=${page}&limit=50`,
+      `/user-community-repost/${id}?page=${page}&limit=25`,
     );
     const data = await res.data;
     setReposts([...data.posts]);
