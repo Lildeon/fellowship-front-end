@@ -35,7 +35,7 @@ const User = () => {
 
   const confirm = async (e) => {
     e.preventDefault();
-    const res = await api.post(`verify-password`, {
+    const res = await api.post(`/verify-password`, {
       password,
     });
     if (res.status === 201) {
