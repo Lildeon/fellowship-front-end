@@ -58,7 +58,7 @@ export default ProfilePostMore;
 
 const DelPost = ({ postId, url, onReload }) => {
   const handleDelete = async () => {
-    await api.delete(`http://localhost:8080/${url}/${postId}`);
+    await api.delete(`${url}/${postId}`);
     onReload();
   };
   return (
