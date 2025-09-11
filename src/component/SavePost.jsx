@@ -1,18 +1,61 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
 import api from "@/services/axios";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
-const SavePost = ({ postID, bookmark, onToggle, booked }) => {
-  const [toggle, setToggle] = useState(false);
+const SavePost = ({ postID, bookmark, booked, qKey }) => {
+  const user = localStorage.getItem("user");
+  const queryClient = useQueryClient();
 
   const handleBookmark = async () => {
-    setToggle(!toggle);
     await api.post(`${bookmark}/${postID}`);
-    onToggle();
   };
 
+  const mutation = useMutation({
+    mutationFn: handleBookmark,
+    onMutate: async (postID) => {
+      await queryClient.cancelQueries({ queryKey: [qKey] });
+
+      const prevPost = queryClient.getQueryData([qKey]);
+
+      queryClient.setQueryData([qKey], (old) => {
+        if (!old) return old;
+
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            posts: page.data.posts.map((p) => {
+              if (p._id !== postID) return p;
+
+              const alreadyBookmark = p.bookmark.includes(user);
+              return {
+                ...p,
+                bookmark: alreadyBookmark
+                  ? p.bookmark.filter((id) => id !== user) // unbookmark
+                  : [...p.bookmark, user], // bookmark
+              };
+            }),
+          })),
+        };
+      });
+
+      // return context for rollback
+      return { prevPost };
+    },
+
+    onError: (_err, _vars, context) => {
+      // rollback on error
+      queryClient.setQueryData([qKey], context.prevData);
+    },
+
+    onSettled: () => {
+      // refetch to sync with server
+      queryClient.invalidateQueries([qKey]);
+    },
+  });
+
   return (
-    <div onClick={handleBookmark} className="flex gap-2">
+    <div onClick={() => mutation.mutate(postID)} className="flex gap-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
