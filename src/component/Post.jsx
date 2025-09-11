@@ -9,15 +9,16 @@ import {
 } from "@/components/ui/dialog";
 import api from "@/services/axios";
 import Loader from "./Loader";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Post = () => {
   const [content, setContent] = useState("");
   const [file, setFile] = useState("");
   const [render, setRender] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const queryClient = useQueryClient();
 
   const loading = file.name?.length > 0 ? true : false;
-  console.log(file);
 
   const imageMaxSize = 5 * 1024 * 1024;
   const videoMaxSize = 20 * 1024 * 1024;
@@ -45,6 +46,7 @@ const Post = () => {
       URL.revokeObjectURL(file.url);
     };
   }, [render, file.url]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const post = { content, file };
@@ -57,6 +59,13 @@ const Post = () => {
     setContent("");
     setRender(!render);
   };
+
+  const mutation = useMutation({
+    mutationFn: handleSubmit,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
 
   return (
     <Dialog>
@@ -85,7 +94,7 @@ const Post = () => {
         </DialogHeader>
 
         <div className="">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <form onSubmit={mutation.mutate} className="flex flex-col gap-3">
             <textarea
               name="content"
               rows={6}
