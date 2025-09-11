@@ -1,4 +1,4 @@
-import { BounceLoader } from "react-spinners";
+import { BounceLoader, BeatLoader } from "react-spinners";
 
 // eslint-disable-next-line react/prop-types
 const Loader = ({ loading }) => {
@@ -20,3 +20,22 @@ const Loader = ({ loading }) => {
 };
 
 export default Loader;
+
+// eslint-disable-next-line react/prop-types
+export const Feedloader = ({ loading }) => {
+  const override = {
+    display: "block",
+    margin: "0 auto",
+    borderColor: "red",
+  };
+
+  return (
+    <BeatLoader
+      loading={loading}
+      size={20}
+      aria-label="Loading Spinner"
+      data-testid="loader"
+      cssOverride={override}
+    />
+  );
+};
