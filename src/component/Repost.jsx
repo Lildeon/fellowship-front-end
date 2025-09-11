@@ -1,15 +1,64 @@
 /* eslint-disable react/prop-types */
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/services/axios";
 
-const Repost = ({ postID, repost, reposted, onToggle }) => {
+const Repost = ({ postID, repost, reposted, qKey }) => {
+  const user = localStorage.getItem("user");
+  const queryClient = useQueryClient();
   const handleRepost = async () => {
     await api.post(`${repost}/${postID}`);
-    onToggle();
   };
 
+  const mutation = useMutation({
+    mutationFn: handleRepost,
+    onMutate: async (postID) => {
+      await queryClient.cancelQueries({ queryKey: [qKey] });
+
+      const prevPost = queryClient.getQueryData([qKey]);
+
+      queryClient.setQueryData([qKey], (old) => {
+        if (!old) return old;
+
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            posts: page.data.posts.map((p) => {
+              if (p._id !== postID) return p;
+
+              const alreadyRepost = p.reposts.includes(user);
+              return {
+                ...p,
+                reposts: alreadyRepost
+                  ? p.reposts.filter((id) => id !== user) // unrepost
+                  : [...p.reposts, user], // repost
+              };
+            }),
+          })),
+        };
+      });
+
+      // return context for rollback
+      return { prevPost };
+    },
+
+    onError: (_err, _vars, context) => {
+      // rollback on error
+      queryClient.setQueryData([qKey], context.prevData);
+    },
+
+    onSettled: () => {
+      // refetch to sync with server
+      queryClient.invalidateQueries([qKey]);
+    },
+  });
+
   return (
-    <button type="button" onClick={handleRepost} className="flex gap-2">
+    <button
+      type="button"
+      onClick={() => mutation.mutate(postID)}
+      className="flex gap-2"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
