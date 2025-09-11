@@ -13,7 +13,7 @@ const HomeLayout = () => {
                 : "text-center hover:bg-gray-100 pt-5 max-[500px]:pt-10"
             }
           >
-            home
+            Home
           </NavLink>
           <NavLink
             to={"/pages-posts"}
@@ -23,7 +23,7 @@ const HomeLayout = () => {
                 : "text-center pt-5 max-[500px]:pt-10 hover:bg-gray-100"
             }
           >
-            page
+            Page
           </NavLink>
         </div>
       </div>
