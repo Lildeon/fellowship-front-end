@@ -1,15 +1,64 @@
 /* eslint-disable react/prop-types */
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/services/axios";
 
-const LikePost = ({ postID, like, liked, onToggle }) => {
+const LikePost = ({ postID, like, liked, qKey }) => {
+  const queryClient = useQueryClient();
+  const user = localStorage.getItem("user");
   const handleLike = async () => {
     await api.post(`${like}/${postID}`);
-    onToggle();
   };
 
+  const mutation = useMutation({
+    mutationFn: handleLike,
+    onMutate: async (postID) => {
+      await queryClient.cancelQueries({ queryKey: [qKey] });
+
+      const prevPost = queryClient.getQueryData([qKey]);
+
+      queryClient.setQueryData([qKey], (old) => {
+        if (!old) return old;
+
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            posts: page.data.posts.map((p) => {
+              if (p._id !== postID) return p;
+
+              const alreadyLiked = p.likes.includes(user);
+              return {
+                ...p,
+                likes: alreadyLiked
+                  ? p.likes.filter((id) => id !== user) // unlike
+                  : [...p.likes, user], // like
+              };
+            }),
+          })),
+        };
+      });
+
+      // return context for rollback
+      return { prevPost };
+    },
+
+    onError: (_err, _vars, context) => {
+      // rollback on error
+      queryClient.setQueryData([qKey], context.prevData);
+    },
+
+    onSettled: () => {
+      // refetch to sync with server
+      queryClient.invalidateQueries([qKey]);
+    },
+  });
+
   return (
-    <button type="button" onClick={handleLike} className="flex gap-2">
+    <button
+      type="button"
+      onClick={() => mutation.mutate(postID)}
+      className="flex gap-2"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
