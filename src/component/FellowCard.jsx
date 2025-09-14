@@ -44,7 +44,7 @@ const FellowCard = ({ post }) => {
             <Comment
               postID={`${post._id}`}
               url="api/fellowship-comment"
-              qKey="fellowPosts"
+              qKey="fellowposts"
             />
             {post.comments.length > 0 && post.comments.length}
           </div>
@@ -58,7 +58,7 @@ const FellowCard = ({ post }) => {
                   ? "size-6 stroke-red-700 fill-red-700"
                   : "size-6 stroke-black",
               }}
-              qKey="fellowPosts"
+              qKey="fellowposts"
             />
             {post.likes.length > 0 && post.likes.length}
           </div>
@@ -72,7 +72,7 @@ const FellowCard = ({ post }) => {
                   ? "size-6 stroke-purple-500 stroke-2"
                   : "size-6 stroke-black stroke-2",
               }}
-              qKey="fellowPosts"
+              qKey="fellowposts"
             />
             {post.reposts.length > 0 && post.reposts.length}
           </div>
@@ -86,7 +86,7 @@ const FellowCard = ({ post }) => {
                   ? "size-6 stroke-green-700 fill-green-700 stroke-2"
                   : "size-6 stroke-black stroke-2",
               }}
-              qKey="fellowPosts"
+              qKey="fellowposts"
             />
             {post?.bookmark.length > 0 && post?.bookmark.length}
           </div>
