@@ -24,7 +24,7 @@ const PostCard = ({ post }) => {
           <Link to={`/user/${post.user?._id}/post`} className="font-medium">
             {post.user?.username}
           </Link>
-          <Postmore postID={{ id: post._id }} />
+          <Postmore postId={`${post._id}`} />
         </div>
         <Link to={`/view/${post?._id}`}>
           {post?.content && <p className="line-clamp-[10]">{post?.content}</p>}
