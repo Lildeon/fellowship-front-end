@@ -69,7 +69,7 @@ const Home = () => {
         </React.Fragment>
       ))}
 
-      <div className="flex justify-center">
+      <div className="flex justify-center" ref={ref}>
         <button
           onClick={() => fetchNextPage()}
           disabled={!hasNextPage || isFetchingNextPage}
@@ -86,7 +86,6 @@ const Home = () => {
         </button>
       </div>
       <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
-      <div ref={ref}></div>
     </>
   );
 };

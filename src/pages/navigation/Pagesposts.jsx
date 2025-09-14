@@ -56,7 +56,7 @@ const Pagesposts = () => {
         </React.Fragment>
       ))}
 
-      <div className="flex justify-center">
+      <div className="flex justify-center" ref={ref}>
         <button
           onClick={() => fetchNextPage()}
           disabled={!hasNextPage || isFetchingNextPage}
@@ -73,7 +73,6 @@ const Pagesposts = () => {
         </button>
       </div>
       <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
-      <div ref={ref}></div>
     </>
   );
 };

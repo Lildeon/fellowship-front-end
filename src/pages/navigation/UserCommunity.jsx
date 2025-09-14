@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link, useParams } from "react-router";
 import Repost from "@/component/Repost";
 import Comment from "@/component/Comment";
@@ -8,205 +8,174 @@ import api from "@/services/axios";
 import Avater from "@/component/Avater";
 import { poster } from "@/component/poster";
 import { LazyAutoPauseVideo } from "@/component/LazyPost";
-import { Separator } from "@/components/ui/separator";
+import { Feedloader } from "@/component/Loader";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
 
 const UserCommunity = () => {
   const { id } = useParams();
   const user = localStorage.getItem("user");
-  const [reposts, setReposts] = useState([]);
-  const [page, setPage] = useState(() => {
-    const userCommNum = sessionStorage.getItem("userCommNum");
-    return userCommNum ? parseInt(userCommNum) : 1;
-  });
-  const [totalPages, setTotalpages] = useState();
-  const filterPost = reposts.filter((post) => post.post !== null);
+  const { ref, inView } = useInView();
 
-  const [toggle, setToggle] = useState(false);
-  const Toggle = () => setToggle(!toggle);
-
-  const fetchMorePosts = async () => {
-    const res = await api.get(
-      `/user-community-repost/${id}?page=${page}&limit=25`,
+  const fetchPosts = async ({ pageParam }) => {
+    return await api.get(
+      `/user-community-repost/${id}?page=${pageParam}&limit=4`,
     );
-    const data = await res.data;
-    setReposts([...data.posts]);
-    setTotalpages(data.totalPages);
   };
+  const {
+    data,
+    status,
+    fetchNextPage,
+    isFetching,
+    hasNextPage,
+    isFetchingNextPage,
+    error,
+  } = useInfiniteQuery({
+    queryKey: ["fellowposts", "usercommunity", id],
+    queryFn: fetchPosts,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) => {
+      console.log({ lastPage: lastPage, pages: pages });
+      const nextPage = lastPage.data.hasMore ? pages.length + 1 : undefined;
+      return nextPage;
+    },
+  });
 
   useEffect(() => {
-    fetchMorePosts();
-    sessionStorage.setItem("userCommNum", page);
-  }, [id, toggle, page]);
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage, hasNextPage]);
+
+  if (status === "pending") {
+    return (
+      <div className="flex justify-center text-xl font-medium">
+        <Feedloader />
+      </div>
+    );
+  } else if (status === "error") {
+    return <p>Error: {error.message}</p>;
+  }
+
   return (
-    <div>
-      <button
-        onClick={() => {
-          setPage(page - 1);
-          if (page - 1 === 0) {
-            setPage(1);
-          }
-        }}
-        className="flex justify-self-center"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="size-6 hover:stroke-purple-700"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="m4.5 15.75 7.5-7.5 7.5 7.5"
-          />
-        </svg>
-      </button>
-      {filterPost.length > 0 &&
-        filterPost.map((repost) => (
-          <div key={repost._id} className="px-4 py-3 flex border-t border-r">
-            <Avater src={repost.page?.coverPhotoUrl} />
+    <>
+      {data?.pages.map((group, i) => (
+        <React.Fragment key={i}>
+          {group.data.posts?.map((post, i) => (
+            <div key={i} className="px-4 py-3 flex border-b border-r">
+              <Avater src={post.page?.coverPhotoUrl} />
 
-            <div className="flex flex-col w-full ml-2.5">
-              <Link
-                to={`/fellowship/${repost.page._id}/post`}
-                className="font-medium"
-              >
-                {repost.page.name}
-              </Link>
+              <div className="flex flex-col w-full ml-2.5">
+                <Link
+                  to={`/fellowship/${post.page._id}/post`}
+                  className="font-medium"
+                >
+                  {post.page.name}
+                </Link>
 
-              <Link to={`/fellowship-post/${repost.post?._id}`}>
-                {repost.post?.content && (
-                  <p className="line-clamp-[10]">{repost.post?.content}</p>
-                )}
+                <Link to={`/fellowship-post/${post.post?._id}`}>
+                  {post.post?.content && (
+                    <p className="line-clamp-[10]">{post.post?.content}</p>
+                  )}
 
-                {repost.post?.imageUrl && (
-                  <div className="overflow-hidden">
-                    <img
-                      src={repost.post?.imageUrl}
-                      className="w-fit h-fit rounded-2xl"
-                      loading="lazy"
-                    />
+                  {post.post?.imageUrl && (
+                    <div className="overflow-hidden">
+                      <img
+                        src={post.post?.imageUrl}
+                        className="w-fit h-fit rounded-2xl"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  {post.post?.videoUrl && (
+                    <div>
+                      <LazyAutoPauseVideo
+                        src={post.post?.videoUrl}
+                        poster={poster}
+                      />
+                    </div>
+                  )}
+                </Link>
+                {post.post !== null && (
+                  <div className="grid grid-cols-4 pt-3 gap-x-5 min-[800px]:gap-x-20">
+                    <div className="flex gap-1">
+                      <Comment
+                        postID={`${post.post._id}`}
+                        url="api/fellowship-comment"
+                        qKey="fellowposts"
+                      />
+                      {post.post.comments.length > 0 &&
+                        post.post.comments.length}
+                    </div>
+
+                    <div className="flex gap-1">
+                      <LikePost
+                        postID={`${post.post._id}`}
+                        like="api/fellowship-like"
+                        liked={{
+                          liked: post.post.likes?.includes(user)
+                            ? "size-6 stroke-red-700 fill-red-700"
+                            : "size-6 stroke-black",
+                        }}
+                        qKey="fellowposts"
+                      />
+                      {post.post.likes.length > 0 && post.post.likes.length}
+                    </div>
+
+                    <div className="flex gap-1">
+                      <Repost
+                        postID={`${post.post._id}`}
+                        repost="api/fellowship-repost"
+                        reposted={{
+                          reposted: post.post.reposts?.includes(user)
+                            ? "size-6 stroke-purple-500 stroke-2"
+                            : "size-6 stroke-black stroke-2",
+                        }}
+                        qKey="fellowposts"
+                      />
+                      {post.post.reposts.length > 0 && post.post.reposts.length}
+                    </div>
+
+                    <div className="flex gap-1">
+                      <SavePost
+                        postID={`${post.post._id}`}
+                        bookmark="api/fellowship-bookmark"
+                        booked={{
+                          booked: post.post?.bookmark.includes(user)
+                            ? "size-6 stroke-green-700 fill-green-700 stroke-2"
+                            : "size-6 stroke-black stroke-2",
+                        }}
+                        qKey="fellowposts"
+                      />
+                      {post.post?.bookmark.length > 0 &&
+                        post.post?.bookmark.length}
+                    </div>
                   </div>
                 )}
-                {repost.post?.videoUrl && (
-                  <div>
-                    <LazyAutoPauseVideo
-                      src={repost.post?.videoUrl}
-                      poster={poster}
-                    />
-                  </div>
-                )}
-              </Link>
-              {repost.post !== null && (
-                <div className="grid grid-cols-4 pt-3 gap-x-5 min-[800px]:gap-x-20">
-                  <div className="flex gap-1">
-                    <Comment
-                      postID={`${repost.post._id}`}
-                      url="api/fellowship-comment"
-                    />
-                    {repost.post.comments.length > 0 &&
-                      repost.post.comments.length}
-                  </div>
-
-                  <div className="flex gap-1">
-                    <LikePost
-                      postID={`${repost.post._id}`}
-                      like="api/fellowship-like"
-                      onToggle={Toggle}
-                      liked={{
-                        liked: repost.post.likes?.find((id) => id === user)
-                          ? "size-6 stroke-red-700 fill-red-700"
-                          : "size-6 stroke-black",
-                      }}
-                    />
-                    {repost.post.likes.length > 0 && repost.post.likes.length}
-                  </div>
-
-                  <div className="flex gap-1">
-                    <Repost
-                      postID={`${repost.post._id}`}
-                      repost="api/fellowship-repost"
-                      onToggle={Toggle}
-                      reposted={{
-                        reposted: repost.post.reposts?.find((id) => id === user)
-                          ? "size-6 stroke-purple-500 stroke-2"
-                          : "size-6 stroke-black stroke-2",
-                      }}
-                    />
-                    {repost.post.reposts.length > 0 &&
-                      repost.post.reposts.length}
-                  </div>
-
-                  <div className="flex gap-1">
-                    <SavePost
-                      postID={`${repost.post._id}`}
-                      bookmark="api/fellowship-bookmark"
-                      onToggle={Toggle}
-                      booked={{
-                        booked: repost.post?.bookmark.includes(user)
-                          ? "size-6 stroke-green-700 fill-green-700 stroke-2"
-                          : "size-6 stroke-black stroke-2",
-                      }}
-                    />
-                    {repost.post?.bookmark.length > 0 &&
-                      repost.post?.bookmark.length}
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
-          </div>
-        ))}
-      <div>{reposts.length !== 0 && <Separator />}</div>
-      <div>
+          ))}
+        </React.Fragment>
+      ))}
+
+      <div className="flex justify-center" ref={ref}>
         <button
-          onClick={() => {
-            setPage(page + 1);
-            window.scrollTo(0, 0);
-          }}
-          className={
-            reposts.length === 0 ? "hidden" : "flex justify-self-center"
-          }
+          onClick={() => fetchNextPage()}
+          disabled={!hasNextPage || isFetchingNextPage}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6 hover:stroke-purple-700"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m19.5 8.25-7.5 7.5-7.5-7.5"
-            />
-          </svg>
-        </button>
-        <button
-          onClick={() => {
-            setPage(1);
-          }}
-          className={"flex justify-self-end"}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6 hover:stroke-pink-500"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m15 11.25-3-3m0 0-3 3m3-3v7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-            />
-          </svg>
+          {isFetchingNextPage ? (
+            <div>
+              <Feedloader />
+            </div>
+          ) : hasNextPage ? (
+            "Load More"
+          ) : (
+            "No more posts"
+          )}
         </button>
       </div>
-    </div>
+      <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
+    </>
   );
 };
 

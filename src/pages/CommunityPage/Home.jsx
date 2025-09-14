@@ -64,7 +64,7 @@ const CommunityHome = () => {
           </React.Fragment>
         ))}
 
-        <div className="flex justify-center">
+        <div className="flex justify-center" ref={ref}>
           <button
             onClick={() => fetchNextPage()}
             disabled={!hasNextPage || isFetchingNextPage}
@@ -81,7 +81,6 @@ const CommunityHome = () => {
           </button>
         </div>
         <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
-        <div ref={ref}></div>
       </div>
       <div className="hidden lg:inline w-xl">
         <Suspense fallback={<p>loading...</p>}>
