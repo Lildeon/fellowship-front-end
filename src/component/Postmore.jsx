@@ -8,9 +8,9 @@ import { Link } from "react-router";
 import Alertdialog from "./Alertdialog";
 import api from "@/services/axios";
 
-const Postmore = ({ postID, onToggle }) => {
+const Postmore = ({ postId, onToggle }) => {
   const handleFav = async () => {
-    await api.post(`favourite/${postID.id}`);
+    await api.post(`favourite/${postId}`);
     setTimeout(() => onToggle(), 1000);
   };
 
@@ -38,7 +38,7 @@ const Postmore = ({ postID, onToggle }) => {
         <div type="button" onClick={handleFav}>
           <Alertdialog />
         </div>
-        <Link to={`/view/${postID.id}`}>View Post</Link>
+        <Link to={`/view/${postId}`}>View Post</Link>
       </PopoverContent>
     </Popover>
   );
