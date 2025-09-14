@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import Comment from "@/component/Comment";
 import LikePost from "@/component/LikePost";
 import Repost from "@/component/Repost";
@@ -7,124 +7,133 @@ import { Link, useParams } from "react-router";
 import api from "@/services/axios";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { poster } from "@/component/poster";
+import { useQuery } from "@tanstack/react-query";
+import { Feedloader } from "@/component/Loader";
 
 const Fellowship = lazy(() => import("./ExploreFellow"));
 const Testimony = lazy(() => import("@/component/GetTestimony"));
 
 const ViewFellowPost = () => {
-  const [post, setPost] = useState();
-  console.log(post);
   const { id } = useParams();
   const user = localStorage.getItem("user");
 
-  const [toggle, setToggle] = useState(false);
-  const Toggle = () => setToggle(!toggle);
+  const { data, isError, error, isPending } = useQuery({
+    queryKey: ["fellowposts", id],
+    queryFn: async () => {
+      return api.get(`api/view-post/${id}`);
+    },
+  });
 
-  useEffect(() => {
-    api.get(`api/view-post/${id}`).then((res) => setPost(res.data));
-  }, [id, toggle]);
   return (
     <div className="flex gap-10 p-5 max-[500px]:mt-5">
       <div className="w-full">
-        {post && (
-          <div key={post._id}>
-            <div className="flex gap-3">
-              <Link
-                to={`/fellowship/${post.fellowship?._id}/post`}
-                className="pb-3"
-              >
-                <Avatar className="w-15 h-15 rounded-full">
-                  <AvatarImage src={post.fellowship?.coverPhotoUrl} />
-                  <AvatarFallback>photo</AvatarFallback>
-                </Avatar>
-              </Link>
-              <Link
-                to={`/fellowship/${post.fellowship?._id}/post`}
-                className="text-xl font-medium block"
-              >
-                {post.fellowship?.name}
-              </Link>
-            </div>
-            <div>
-              {post?.imageUrl && (
-                <div className="overflow-hidden">
-                  <img
-                    src={post?.imageUrl}
-                    className="w-fit h-fit rounded-2xl"
+        <div className="flex justify-center">{isPending && <Feedloader />}</div>
+        <p>{isError && error.message}</p>
+        <div>
+          {data?.data && (
+            <div key={data.data._id}>
+              <div className="flex gap-3">
+                <Link
+                  to={`/fellowship/${data.data.fellowship?._id}/post`}
+                  className="pb-3"
+                >
+                  <Avatar className="w-15 h-15 rounded-full">
+                    <AvatarImage src={data.data.fellowship?.coverPhotoUrl} />
+                    <AvatarFallback>photo</AvatarFallback>
+                  </Avatar>
+                </Link>
+                <Link
+                  to={`/fellowship/${data.data.fellowship?._id}/post`}
+                  className="text-xl font-medium block"
+                >
+                  {data.data.fellowship?.name}
+                </Link>
+              </div>
+              <div>
+                {data.data?.imageUrl && (
+                  <div className="overflow-hidden">
+                    <img
+                      src={data.data?.imageUrl}
+                      className="w-fit h-fit rounded-2xl"
+                    />
+                  </div>
+                )}
+                {data.data?.videoUrl && (
+                  <div>
+                    <video
+                      controls
+                      autoPlay
+                      muted
+                      poster={poster}
+                      className="w-fit h-fit rounded-2xl"
+                    >
+                      <source src={data.data?.videoUrl} type="video/mp4" />
+                    </video>
+                  </div>
+                )}
+                {data.data?.content && <p>{data.data?.content}</p>}
+              </div>
+              <div className="py-2 text-lg">
+                {new Date(data.data.createdAt).toUTCString().slice(5, -7)}
+              </div>
+              <div className="grid grid-cols-4 pt-3 gap-x-13 min-[500px]:gap-x-23">
+                <div className="flex gap-1">
+                  <Comment
+                    postID={`${data.data._id}`}
+                    url="api/fellowship-comment"
+                    qKey="fellowposts"
                   />
+                  {data.data.comments.length > 0 && data.data.comments.length}
                 </div>
-              )}
-              {post?.videoUrl && (
-                <div>
-                  <video
-                    controls
-                    autoPlay
-                    muted
-                    poster={poster}
-                    className="w-fit h-fit rounded-2xl"
-                  >
-                    <source src={post?.videoUrl} type="video/mp4" />
-                  </video>
+
+                <div className="flex gap-1">
+                  <LikePost
+                    postID={`${data.data._id}`}
+                    like="api/fellowship-like"
+                    liked={{
+                      liked: data.data.likes?.includes(user)
+                        ? "size-6 stroke-red-700 fill-red-700"
+                        : "size-6 stroke-black",
+                    }}
+                    qKey="fellowposts"
+                  />
+                  {data.data.likes.length > 0 && data.data.likes.length}
                 </div>
-              )}
-              {post?.content && <p>{post?.content}</p>}
-            </div>
-            <div className="py-2 text-lg">
-              {new Date(post.createdAt).toUTCString().slice(5, -7)}
-            </div>
-            <div className="grid grid-cols-4 pt-3 gap-x-13 min-[500px]:gap-x-23">
-              <div className="flex gap-1">
-                <Comment postID={`${post._id}`} url="api/fellowship-comment" />
-                {post.comments.length > 0 && post.comments.length}
-              </div>
 
-              <div className="flex gap-1">
-                <LikePost
-                  postID={`${post._id}`}
-                  like="api/fellowship-like"
-                  onToggle={Toggle}
-                  liked={{
-                    liked: post.likes?.find((id) => id === user)
-                      ? "size-6 stroke-red-700 fill-red-700"
-                      : "size-6 stroke-black",
-                  }}
-                />
-                {post.likes.length > 0 && post.likes.length}
-              </div>
-
-              <div className="flex gap-1">
-                <Repost
-                  postID={`${post._id}`}
-                  repost="api/fellowship-repost"
-                  onToggle={Toggle}
-                  reposted={{
-                    reposted: post.reposts?.includes(user)
-                      ? "size-6 stroke-purple-500 stroke-2"
-                      : "size-6 stroke-black stroke-2",
-                  }}
-                />
-                {post.reposts.length > 0 && post.reposts.length}
-              </div>
-              <div className="flex gap-1">
-                <SavePost
-                  postID={`${post._id}`}
-                  bookmark="api/fellowship-bookmark"
-                  onToggle={Toggle}
-                  booked={{
-                    booked: post?.bookmark.includes(user)
-                      ? "size-6 stroke-green-700 fill-green-700 stroke-2"
-                      : "size-6 stroke-black stroke-2",
-                  }}
-                />
-                {post?.bookmark.length > 0 && post?.bookmark.length}
+                <div className="flex gap-1">
+                  <Repost
+                    postID={`${data.data._id}`}
+                    repost="api/fellowship-repost"
+                    reposted={{
+                      reposted: data.data.reposts?.includes(user)
+                        ? "size-6 stroke-purple-500 stroke-2"
+                        : "size-6 stroke-black stroke-2",
+                    }}
+                    qKey="fellowposts"
+                  />
+                  {data.data.reposts.length > 0 && data.data.reposts.length}
+                </div>
+                <div className="flex gap-1">
+                  <SavePost
+                    postID={`${data.data._id}`}
+                    bookmark="api/fellowship-bookmark"
+                    booked={{
+                      booked: data.data?.bookmark.includes(user)
+                        ? "size-6 stroke-green-700 fill-green-700 stroke-2"
+                        : "size-6 stroke-black stroke-2",
+                    }}
+                    qKey="fellowposts"
+                  />
+                  {data.data?.bookmark.length > 0 && data.data?.bookmark.length}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
         <div>
           <h1 className="pt-10 border-b">Comments</h1>
-          {post?.comments.length > 0 &&
-            post.comments.map((comment) => (
+          {data?.data.comments.length > 0 &&
+            data.data.comments.map((comment) => (
               <div key={comment._id} className="flex gap-3 border-b py-3">
                 <Link
                   to={`/user/${comment.user._id}/post`}
