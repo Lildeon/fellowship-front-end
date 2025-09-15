@@ -26,13 +26,9 @@ const UserLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = { password, email };
-    const res = await axios.post(
-      `https://fellowship-backend.up.railway.app/login`,
-      formData,
-      {
-        withCredentials: true,
-      },
-    );
+    const res = await axios.post(`http://localhost:8080/login`, formData, {
+      withCredentials: true,
+    });
 
     if (res.status === 201) {
       localStorage.setItem("user", res.data._id);

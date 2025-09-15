@@ -67,7 +67,7 @@ const ChurchPost = () => {
           <Avater src={post.church?.coverPhotoUrl} alt="P" />
 
           <div className="w-full flex flex-col">
-            <div className="font-medium">{post.church.name}</div>
+            <div className="font-medium">{post.church?.name}</div>
 
             <Link to={`/page-post/${post._id}`}>
               {post?.content && (

@@ -68,8 +68,8 @@ const BranchPagePost = () => {
           <div className="w-full flex flex-col">
             <div className="flex justify-between">
               <div>
-                <p className="font-medium">{post.branch.name}</p>
-                <p>{post.branch.tag}</p>
+                <p className="font-medium">{post.branch?.name}</p>
+                <p>{post.branch?.tag}</p>
               </div>
               <ProfilePostMore
                 postId={`${post._id}`}

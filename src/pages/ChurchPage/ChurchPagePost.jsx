@@ -67,7 +67,7 @@ const ChurchPagePost = () => {
 
           <div className="w-full flex flex-col">
             <div className="flex justify-between">
-              <div className="font-medium">{post.church.name}</div>
+              <div className="font-medium">{post.church?.name}</div>
 
               <div>
                 <ProfilePostMore
