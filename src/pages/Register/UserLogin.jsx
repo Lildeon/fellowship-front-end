@@ -26,7 +26,7 @@ const UserLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = { password, email };
-    const res = await axios.post(`http://localhost:8080/login`, formData, {
+    const res = await axios.post(`https://fellowship-backend.up.railway.app/login`, formData, {
       withCredentials: true,
     });
 
