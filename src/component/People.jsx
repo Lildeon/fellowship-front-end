@@ -36,24 +36,7 @@ const People = () => {
                 <Avater src={pupil.userPhotoUrl} alt="photo" />
                 <div className="pb-5 text-lg font-medium">{pupil.username}</div>
               </Link>
-              <div>
-                {pupil._id !== user && (
-                  <Follow
-                    userId={`${pupil._id}`}
-                    followed={{
-                      followed: pupil?.follower.includes(user) ? (
-                        <p className="px-5 py-1 h-fit w-28 rounded-2xl border">
-                          following
-                        </p>
-                      ) : (
-                        <p className="px-5 py-1 h-fit w-28 rounded-2xl bg-black text-white">
-                          follow
-                        </p>
-                      ),
-                    }}
-                  />
-                )}
-              </div>
+              <div>{pupil._id !== user && <Follow user={pupil} />}</div>
             </div>
           ))}
       </div>

@@ -20,6 +20,7 @@ const ViewUser = () => {
       return api.get(`user/profile/${params.id}`);
     },
   });
+
   if (isPending) {
     return <Feedloader />;
   }
@@ -41,22 +42,7 @@ const ViewUser = () => {
               <UserPhoto src={data.data.userPhotoUrl} />
             </div>
             <div className="pt-2 right-1 absolute">
-              {data.data._id !== user && (
-                <Follow
-                  userId={`${params.id}`}
-                  followed={{
-                    followed: data.data.follower?.includes(user) ? (
-                      <p className="px-5 py-1 h-fit w-28 rounded-2xl border">
-                        following
-                      </p>
-                    ) : (
-                      <p className="px-5 py-1 h-fit w-28 rounded-2xl bg-black text-white">
-                        follow
-                      </p>
-                    ),
-                  }}
-                />
-              )}
+              {data.data._id !== user && <Follow user={data.data} />}
             </div>
           </div>
           <div className="px-1">
