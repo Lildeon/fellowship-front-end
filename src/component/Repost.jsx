@@ -2,11 +2,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/services/axios";
 
-const Repost = ({ postID, repost, reposted, qKey }) => {
+const Repost = ({ post, repost, qKey }) => {
   const user = localStorage.getItem("user");
   const queryClient = useQueryClient();
   const handleRepost = async () => {
-    await api.post(`${repost}/${postID}`);
+    await api.post(`${repost}/${post._id}`);
   };
 
   const mutation = useMutation({
@@ -14,7 +14,7 @@ const Repost = ({ postID, repost, reposted, qKey }) => {
     onMutate: async (postID) => {
       await queryClient.cancelQueries({ queryKey: [qKey] });
 
-      const prevPost = queryClient.getQueryData([qKey]);
+      const prevData = queryClient.getQueryData([qKey]);
 
       queryClient.setQueryData([qKey], (old) => {
         if (!old) return old;
@@ -26,12 +26,12 @@ const Repost = ({ postID, repost, reposted, qKey }) => {
             posts: page.data.posts.map((p) => {
               if (p._id !== postID) return p;
 
-              const alreadyRepost = p.reposts.includes(user);
+              const alreadyReposted = p.reposts.includes(user);
               return {
                 ...p,
-                reposts: alreadyRepost
-                  ? p.reposts.filter((id) => id !== user) // unrepost
-                  : [...p.reposts, user], // repost
+                reposts: alreadyReposted
+                  ? p.reposts.filter((id) => id !== user) // unlike
+                  : [...p.reposts, user], // like
               };
             }),
           })),
@@ -39,7 +39,7 @@ const Repost = ({ postID, repost, reposted, qKey }) => {
       });
 
       // return context for rollback
-      return { prevPost };
+      return { prevData };
     },
 
     onError: (_err, _vars, context) => {
@@ -56,7 +56,7 @@ const Repost = ({ postID, repost, reposted, qKey }) => {
   return (
     <button
       type="button"
-      onClick={() => mutation.mutate(postID)}
+      onClick={() => mutation.mutate(post._id)}
       className="flex gap-2"
     >
       <svg
@@ -65,7 +65,11 @@ const Repost = ({ postID, repost, reposted, qKey }) => {
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className={reposted.reposted ? reposted?.reposted : reposted?.reposted}
+        className={
+          post?.reposts.includes(user)
+            ? "size-6 stroke-purple-500 stroke-2"
+            : "size-6 stroke-black stroke-2"
+        }
       >
         <path
           strokeLinecap="round"

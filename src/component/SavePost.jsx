@@ -15,7 +15,7 @@ const SavePost = ({ post, bookmark, qKey }) => {
     onMutate: async (postID) => {
       await queryClient.cancelQueries({ queryKey: [qKey] });
 
-      const prevPost = queryClient.getQueryData([qKey]);
+      const prevData = queryClient.getQueryData([qKey]);
 
       queryClient.setQueryData([qKey], (old) => {
         if (!old) return old;
@@ -40,7 +40,7 @@ const SavePost = ({ post, bookmark, qKey }) => {
       });
 
       // return context for rollback
-      return { prevPost };
+      return { prevData };
     },
 
     onError: (_err, _vars, context) => {

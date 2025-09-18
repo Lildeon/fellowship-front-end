@@ -2,11 +2,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/services/axios";
 
-const LikePost = ({ postID, like, liked, qKey }) => {
+const LikePost = ({ post, like, qKey }) => {
   const queryClient = useQueryClient();
   const user = localStorage.getItem("user");
   const handleLike = async () => {
-    await api.post(`${like}/${postID}`);
+    await api.post(`${like}/${post._id}`);
   };
 
   const mutation = useMutation({
@@ -14,7 +14,7 @@ const LikePost = ({ postID, like, liked, qKey }) => {
     onMutate: async (postID) => {
       await queryClient.cancelQueries({ queryKey: [qKey] });
 
-      const prevPost = queryClient.getQueryData([qKey]);
+      const prevData = queryClient.getQueryData([qKey]);
 
       queryClient.setQueryData([qKey], (old) => {
         if (!old) return old;
@@ -31,7 +31,7 @@ const LikePost = ({ postID, like, liked, qKey }) => {
                 ...p,
                 likes: alreadyLiked
                   ? p.likes.filter((id) => id !== user) // unlike
-                  : [...p.likes, user], // like
+                  : [user, ...p.likes], // like
               };
             }),
           })),
@@ -39,7 +39,7 @@ const LikePost = ({ postID, like, liked, qKey }) => {
       });
 
       // return context for rollback
-      return { prevPost };
+      return { prevData };
     },
 
     onError: (_err, _vars, context) => {
@@ -49,14 +49,16 @@ const LikePost = ({ postID, like, liked, qKey }) => {
 
     onSettled: () => {
       // refetch to sync with server
-      queryClient.invalidateQueries([qKey]);
+      queryClient.invalidateQueries({
+        queryKey: [qKey],
+      });
     },
   });
 
   return (
     <button
       type="button"
-      onClick={() => mutation.mutate(postID)}
+      onClick={() => mutation.mutate(post._id)}
       className="flex gap-2"
     >
       <svg
@@ -65,7 +67,11 @@ const LikePost = ({ postID, like, liked, qKey }) => {
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className={liked.liked ? liked?.liked : liked?.liked}
+        className={
+          post.likes.includes(user)
+            ? "size-6 stroke-red-400 fill-red-400"
+            : "size-6 stroke-black"
+        }
       >
         <path
           strokeLinecap="round"
