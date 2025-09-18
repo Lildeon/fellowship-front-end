@@ -128,9 +128,7 @@ const User = () => {
         </form>
       )}
       {status === 201 && (
-        <div className="max-w-sm m-auto mt-10">
-          <DeleteUser />
-        </div>
+        <div className="max-w-sm m-auto mt-10">{/* <DeleteUser /> */}</div>
       )}
     </div>
   );
