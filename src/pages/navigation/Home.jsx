@@ -30,7 +30,7 @@ const Home = () => {
       return nextPage;
     },
   });
-  console.log({ data: data });
+
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
