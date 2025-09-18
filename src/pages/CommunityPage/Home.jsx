@@ -31,7 +31,6 @@ const CommunityHome = () => {
     queryFn: fetchPosts,
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
-      console.log({ lastPage: lastPage, pages: pages });
       const nextPage = lastPage.data.hasMore ? pages.length + 1 : undefined;
       return nextPage;
     },
