@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { useState, useEffect, lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import BranchLayout from "@/component/BranchLayout";
 import { Separator } from "@/components/ui/separator";
 import EditBranchProfile from "@/component/EditBranchProfile";
@@ -12,35 +12,47 @@ import Livestream from "@/component/Livestream";
 import PageOption from "@/component/PageOption";
 import api from "@/services/axios";
 import UserPhoto from "@/component/userPhoto";
+import { useQuery } from "@tanstack/react-query";
+import { Feedloader } from "@/component/Loader";
 
 const Testimony = lazy(() => import("@/component/GetTestimony"));
 
 const BranchPage = () => {
   const params = useParams();
-  console.log(params);
 
-  const [branch, setbranch] = useState({});
-  console.log(branch);
   const user = localStorage.getItem("user");
-  useEffect(() => {
-    api.get(`api/branch/${params.id}`).then((res) => setbranch(res.data));
-  }, [params.id]);
 
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["viewbranch", params.branch],
+    queryFn: async () => {
+      return api.get(`api/branch/${params.id}`);
+    },
+  });
+  const page = data?.data;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center text-xl font-medium">
+        <Feedloader />
+      </div>
+    );
+  } else if (isError) {
+    return <p>Error: {error.message}</p>;
+  }
   return (
     <>
-      {(user === branch.user ||
-        branch.admin?.find((admin) => admin._id === user)) && (
+      {(user === page.user ||
+        page.admin?.find((admin) => admin._id === user)) && (
         <div className="flex gap-7">
           <div className="w-full">
             <div className="relative  max-[500px]:mt-10 mb-16">
               <img
-                src={branch?.coverPhotoUrl}
+                src={page?.coverPhotoUrl}
                 alt="photo"
                 className=" h-60 w-full"
               />
 
               <div className="absolute top-1 right-1">
-                {user === branch.user && (
+                {user === page.user && (
                   <PageOption
                     Id={`${params.id}`}
                     url="api/delete-branch"
@@ -51,7 +63,7 @@ const BranchPage = () => {
                 )}
               </div>
               <div className="flex left-2 top-45 absolute">
-                <UserPhoto src={branch?.userPhotoUrl} />
+                <UserPhoto src={page?.userPhotoUrl} />
                 <div className="h-fit mt-18">
                   <Upload
                     userPhoto={`api/user-photo-branch/${params.id}`}
@@ -75,14 +87,14 @@ const BranchPage = () => {
                   </div>
 
                   <div className="hidden min-[500px]:inline">
-                    <EditBranchProfile UserbranchProfile={branch} />
+                    <EditBranchProfile UserbranchProfile={page} />
                   </div>
                   <div className="min-[500px]:hidden mr-1">
                     <BranchPageMore
                       Id={`${params.id}`}
                       path="api/branch-post"
                       eventpath="api/event-branch"
-                      UserbranchProfile={branch}
+                      UserbranchProfile={page}
                     />
                   </div>
                 </div>
@@ -90,74 +102,72 @@ const BranchPage = () => {
             </div>
 
             <div className="px-1">
-              {branch && (
-                <div key={branch._id} className="">
-                  <h1 className="text-2xl font-bold text-gray-600 pt-3">
-                    {branch.name}
-                  </h1>
-                  <h2 className="text-xl text-gray-700 font-medium">
-                    {branch.tag}
-                  </h2>
-                  <div className="flex gap-3 py-2">
-                    <Link
-                      to={`/branch-followers/${params.id}`}
-                      className="hover:underline text-gray-600"
-                    >
-                      Followers
-                    </Link>
-                    <span>
-                      {branch?.followers && branch.followers.length > 0
-                        ? branch.followers.length
-                        : null}
-                    </span>
-                    <span>
-                      Created:{" "}
-                      {new Date(branch.createdAt).toUTCString().slice(7, -13)}
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap">
-                    {branch?.admin.map((admin) => (
-                      <Link
-                        to={`/user/${admin._id}/post`}
-                        key={admin._id}
-                        className="flex gap-2 text-lg font-medium hover:underline text-blue-700"
-                      >
-                        {/* <span>{admin.username}</span> */}
-                        <span>{admin.email}</span>|
-                      </Link>
-                    ))}
-                  </div>
-                  <p>{branch.bio}</p>
-                  <div className="flex flex-wrap gap-x-5 pt-2">
-                    <p>{branch.pastor}</p>
-                    <div className="flex">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="size-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
-                        />
-                      </svg>
-                      {branch.branch}
-                    </div>
-                    <p>{branch.year}</p>
-                  </div>
-                  <div className="pb-2">Executives: {branch.executive}</div>
-                  <Separator />
+              <div key={page._id} className="">
+                <h1 className="text-2xl font-bold text-gray-600 pt-3">
+                  {page.name}
+                </h1>
+                <h2 className="text-xl text-gray-700 font-medium">
+                  {page.tag}
+                </h2>
+                <div className="flex gap-3 py-2">
+                  <Link
+                    to={`/branch-followers/${params.id}`}
+                    className="hover:underline text-gray-600"
+                  >
+                    Followers
+                  </Link>
+                  <span>
+                    {page?.followers && page.followers.length > 0
+                      ? page.followers.length
+                      : null}
+                  </span>
+                  <span>
+                    Created:{" "}
+                    {new Date(page.createdAt).toUTCString().slice(7, -13)}
+                  </span>
                 </div>
-              )}
+                <div className="flex flex-wrap">
+                  {page?.admin.map((admin) => (
+                    <Link
+                      to={`/user/${admin._id}/post`}
+                      key={admin._id}
+                      className="flex gap-2 text-lg font-medium hover:underline text-blue-700"
+                    >
+                      {/* <span>{admin.username}</span> */}
+                      <span>{admin.email}</span>|
+                    </Link>
+                  ))}
+                </div>
+                <p>{page.bio}</p>
+                <div className="flex flex-wrap gap-x-5 pt-2">
+                  <p>{page.pastor}</p>
+                  <div className="flex">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+                      />
+                    </svg>
+                    {page.branch}
+                  </div>
+                  <p>{page.year}</p>
+                </div>
+                <div className="pb-2">Executives: {page.executive}</div>
+                <Separator />
+              </div>
             </div>
 
             <BranchLayout />
