@@ -26,7 +26,6 @@ const Home = () => {
     queryFn: fetchPosts,
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
-      console.log({ lastPage: lastPage, pages: pages });
       const nextPage = lastPage.data.hasMore ? pages.length + 1 : undefined;
       return nextPage;
     },
@@ -37,6 +36,25 @@ const Home = () => {
       fetchNextPage();
     }
   }, [inView, fetchNextPage, hasNextPage]);
+
+  // function useScrollRestoration(key) {
+  //   useEffect(() => {
+  //     const saved = sessionStorage.getItem(key);
+  //     if (saved) {
+  //       window.scrollTo(0, parseInt(saved));
+  //     }
+
+  //     const saveScroll = () => {
+  //       sessionStorage.setItem(key, window.scrollY);
+  //     };
+
+  //     window.addEventListener("beforeunload", saveScroll);
+  //     return () => {
+  //       saveScroll();
+  //       window.removeEventListener("beforeunload", saveScroll);
+  //     };
+  //   }, [key]);
+  // }
   // const loadMoreRef = useRef(null);
 
   // useEffect(() => {
@@ -49,7 +67,7 @@ const Home = () => {
   //   if (loadMoreRef.current) observer.observe(loadMoreRef.current);
   //   return () => observer.disconnect();
   // }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
+  // useScrollRestoration("home-feed");
   if (status === "pending") {
     return (
       <div className="flex justify-center text-xl font-medium">
@@ -61,13 +79,15 @@ const Home = () => {
   }
   return (
     <>
-      {data?.pages.map((group, i) => (
-        <React.Fragment key={i}>
-          {group.data.posts?.map((post, i) => (
-            <PostCard key={i} post={post} />
-          ))}
-        </React.Fragment>
-      ))}
+      <div>
+        {data?.pages.map((group, i) => (
+          <React.Fragment key={i}>
+            {group.data.posts?.map((post, i) => (
+              <PostCard key={i} post={post} />
+            ))}
+          </React.Fragment>
+        ))}
+      </div>
 
       <div className="flex justify-center" ref={ref}>
         <button
