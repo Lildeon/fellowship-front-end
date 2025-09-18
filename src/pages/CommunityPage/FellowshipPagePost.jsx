@@ -15,7 +15,7 @@ import { Feedloader } from "@/component/Loader";
 
 const FellowshipPagePost = () => {
   const { id } = useParams();
-  const user = localStorage.getItem("user");
+
   const { ref, inView } = useInView();
 
   const fetchPosts = async ({ pageParam }) => {
@@ -30,7 +30,7 @@ const FellowshipPagePost = () => {
     isFetchingNextPage,
     error,
   } = useInfiniteQuery({
-    queryKey: ["fellowposts"],
+    queryKey: ["fellowposts", id],
     queryFn: fetchPosts,
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
@@ -105,13 +105,8 @@ const FellowshipPagePost = () => {
 
               <div className="flex gap-1">
                 <LikePost
-                  postID={`${post._id}`}
+                  post={post}
                   like="api/fellowship-like"
-                  liked={{
-                    liked: post.likes?.find((id) => id === user)
-                      ? "size-6 stroke-red-700 fill-red-700"
-                      : "size-6 stroke-black",
-                  }}
                   qKey="fellowposts"
                 />
                 {post.likes.length > 0 && post.likes.length}
@@ -119,13 +114,8 @@ const FellowshipPagePost = () => {
 
               <div className="flex gap-1">
                 <Repost
-                  postID={`${post._id}`}
+                  post={post}
                   repost="api/fellowship-repost"
-                  reposted={{
-                    reposted: post.reposts?.find((id) => id === user)
-                      ? "size-6 stroke-purple-500 stroke-2"
-                      : "size-6 stroke-black stroke-2",
-                  }}
                   qKey="fellowposts"
                 />
                 {post.reposts.length > 0 && post.reposts.length}
@@ -133,13 +123,8 @@ const FellowshipPagePost = () => {
 
               <div className="flex gap-1">
                 <SavePost
-                  postID={`${post._id}`}
+                  post={post}
                   bookmark="api/fellowship-bookmark"
-                  booked={{
-                    booked: post?.bookmark.includes(user)
-                      ? "size-6 stroke-green-700 fill-green-700 stroke-2"
-                      : "size-6 stroke-black stroke-2",
-                  }}
                   qKey="fellowposts"
                 />
                 {post?.bookmark.length > 0 && post?.bookmark.length}

@@ -14,7 +14,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { Feedloader } from "@/component/Loader";
 
 const SaveCommunity = () => {
-  const user = localStorage.getItem("user");
   const { ref, inView } = useInView();
 
   const fetchPosts = async ({ pageParam }) => {
@@ -33,7 +32,6 @@ const SaveCommunity = () => {
     queryFn: fetchPosts,
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
-      console.log({ lastPage: lastPage, pages: pages });
       const nextPage = lastPage.data.hasMore ? pages.length + 1 : undefined;
       return nextPage;
     },
@@ -115,13 +113,8 @@ const SaveCommunity = () => {
 
                   <div className="flex gap-1">
                     <LikePost
-                      postID={`${post.post?._id}`}
+                      post={post.post}
                       like="api/fellowship-like"
-                      liked={{
-                        liked: post.post?.likes.includes(user)
-                          ? "size-6 stroke-red-700 fill-red-700"
-                          : "size-6 stroke-black",
-                      }}
                       qKey="fellowposts"
                     />
                     {post.post?.likes.length > 0 && post.post?.likes.length}
@@ -129,13 +122,8 @@ const SaveCommunity = () => {
 
                   <div className="flex gap-1">
                     <Repost
-                      postID={`${post.post?._id}`}
+                      post={post.post}
                       repost="api/fellowship-repost"
-                      reposted={{
-                        reposted: post.post?.reposts.includes(user)
-                          ? "size-6 stroke-purple-500 stroke-2"
-                          : "size-6 stroke-black stroke-2",
-                      }}
                       qKey="fellowposts"
                     />
                     {post.post?.reposts.length > 0 && post.post?.reposts.length}
@@ -143,13 +131,8 @@ const SaveCommunity = () => {
 
                   <div className="flex gap-1">
                     <SavePost
-                      postID={`${post.post?._id}`}
+                      post={post.post}
                       bookmark="api/fellowship-bookmark"
-                      booked={{
-                        booked: post.post?.bookmark.includes(user)
-                          ? "size-6 stroke-green-700 fill-green-700 stroke-2"
-                          : "size-6 stroke-black stroke-2",
-                      }}
                       qKey="fellowposts"
                     />
                     {post.post?.bookmark.length > 0 &&

@@ -9,7 +9,6 @@ import Repost from "./Repost";
 import SavePost from "./SavePost";
 
 const FellowCard = ({ post }) => {
-  const user = localStorage.getItem("user");
   return (
     <div key={post._id} className="flex p-5 border-b border-r w-full">
       <div className="mr-2.5">
@@ -51,13 +50,8 @@ const FellowCard = ({ post }) => {
 
           <div className="flex gap-1">
             <LikePost
-              postID={`${post._id}`}
+              post={post}
               like="api/fellowship-like"
-              liked={{
-                liked: post.likes?.includes(user)
-                  ? "size-6 stroke-red-700 fill-red-700"
-                  : "size-6 stroke-black",
-              }}
               qKey="fellowposts"
             />
             {post.likes.length > 0 && post.likes.length}
@@ -65,29 +59,15 @@ const FellowCard = ({ post }) => {
 
           <div className="flex gap-1">
             <Repost
-              postID={`${post._id}`}
+              post={post}
               repost="api/fellowship-repost"
-              reposted={{
-                reposted: post.reposts?.includes(user)
-                  ? "size-6 stroke-purple-500 stroke-2"
-                  : "size-6 stroke-black stroke-2",
-              }}
               qKey="fellowposts"
             />
             {post.reposts.length > 0 && post.reposts.length}
           </div>
 
           <div className="flex gap-1">
-            <SavePost
-              postID={`${post._id}`}
-              bookmark="api/fellowship-bookmark"
-              booked={{
-                booked: post?.bookmark.includes(user)
-                  ? "size-6 stroke-green-700 fill-green-700 stroke-2"
-                  : "size-6 stroke-black stroke-2",
-              }}
-              qKey="fellowposts"
-            />
+            <SavePost post={post} qKey="fellowposts" />
             {post?.bookmark.length > 0 && post?.bookmark.length}
           </div>
         </div>

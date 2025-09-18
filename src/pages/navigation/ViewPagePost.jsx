@@ -15,9 +15,9 @@ const Branch = lazy(() => import("@/component/Explore"));
 
 const ViewPagePost = () => {
   const { id } = useParams();
-  const user = localStorage.getItem("user");
+
   const { data, isError, error, isPending } = useQuery({
-    queryKey: ["pageposts", id],
+    queryKey: ["pageposts", "view", id],
     queryFn: async () => {
       return api.get(`page-post/${id}`);
     },
@@ -101,40 +101,25 @@ const ViewPagePost = () => {
                 </div>
                 <div className="flex gap-1">
                   <LikePost
-                    postID={`${id}`}
+                    post={data.data}
                     like="page-post-like"
-                    liked={{
-                      liked: data.data.likes?.includes(user)
-                        ? "size-6 stroke-red-700 fill-red-700"
-                        : "size-6 stroke-black",
-                    }}
                     qKey="pageposts"
                   />
                   {data.data.likes.length > 0 && data.data.likes.length}
                 </div>
                 <div className="flex gap-1">
                   <Repost
-                    postID={`${id}`}
+                    post={data.data}
                     repost="page-post-repost"
                     unrepost="page-post-unrepost"
-                    reposted={{
-                      reposted: data.data.reposts?.includes(user)
-                        ? "size-6 stroke-purple-500 stroke-2"
-                        : "size-6 stroke-black stroke-2",
-                    }}
                     qKey="pageposts"
                   />
                   {data.data.reposts.length > 0 && data.data.reposts.length}
                 </div>
                 <div className="flex gap-1">
                   <SavePost
-                    postID={`${id}`}
+                    post={data.data}
                     bookmark="page-post-bookmark"
-                    booked={{
-                      booked: data.data?.bookmark.includes(user)
-                        ? "size-6 stroke-green-700 fill-green-700 stroke-2"
-                        : "size-6 stroke-black stroke-2",
-                    }}
                     qKey="pageposts"
                   />
                   {data.data?.bookmark.length > 0 && data.data?.bookmark.length}

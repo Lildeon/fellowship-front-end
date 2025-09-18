@@ -15,10 +15,9 @@ const Testimony = lazy(() => import("@/component/GetTestimony"));
 
 const ViewFellowPost = () => {
   const { id } = useParams();
-  const user = localStorage.getItem("user");
 
   const { data, isError, error, isPending } = useQuery({
-    queryKey: ["fellowposts", id],
+    queryKey: ["fellowposts", "view", id],
     queryFn: async () => {
       return api.get(`api/view-post/${id}`);
     },
@@ -88,13 +87,8 @@ const ViewFellowPost = () => {
 
                 <div className="flex gap-1">
                   <LikePost
-                    postID={`${data.data._id}`}
+                    post={data.data}
                     like="api/fellowship-like"
-                    liked={{
-                      liked: data.data.likes?.includes(user)
-                        ? "size-6 stroke-red-700 fill-red-700"
-                        : "size-6 stroke-black",
-                    }}
                     qKey="fellowposts"
                   />
                   {data.data.likes.length > 0 && data.data.likes.length}
@@ -102,26 +96,16 @@ const ViewFellowPost = () => {
 
                 <div className="flex gap-1">
                   <Repost
-                    postID={`${data.data._id}`}
+                    post={data.data}
                     repost="api/fellowship-repost"
-                    reposted={{
-                      reposted: data.data.reposts?.includes(user)
-                        ? "size-6 stroke-purple-500 stroke-2"
-                        : "size-6 stroke-black stroke-2",
-                    }}
                     qKey="fellowposts"
                   />
                   {data.data.reposts.length > 0 && data.data.reposts.length}
                 </div>
                 <div className="flex gap-1">
                   <SavePost
-                    postID={`${data.data._id}`}
+                    post={data.data}
                     bookmark="api/fellowship-bookmark"
-                    booked={{
-                      booked: data.data?.bookmark.includes(user)
-                        ? "size-6 stroke-green-700 fill-green-700 stroke-2"
-                        : "size-6 stroke-black stroke-2",
-                    }}
                     qKey="fellowposts"
                   />
                   {data.data?.bookmark.length > 0 && data.data?.bookmark.length}

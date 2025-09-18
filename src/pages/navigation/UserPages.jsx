@@ -14,7 +14,7 @@ import { useInView } from "react-intersection-observer";
 
 const UserPages = () => {
   const { id } = useParams();
-  const user = localStorage.getItem("user");
+
   const { ref, inView } = useInView();
   const fetchPosts = async ({ pageParam }) => {
     return await api.get(`/user-pages/${id}?page=${pageParam}&limit=4`);
@@ -32,7 +32,6 @@ const UserPages = () => {
     queryFn: fetchPosts,
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
-      console.log({ lastPage: lastPage, pages: pages });
       const nextPage = lastPage.data.hasMore ? pages.length + 1 : undefined;
       return nextPage;
     },
@@ -123,39 +122,21 @@ const UserPages = () => {
                         post.post.comments.length}
                     </div>
                     <div className="flex gap-1">
-                      <LikePost
-                        postID={`${post.post._id}`}
-                        like="page-post-like"
-                        liked={{
-                          liked: post.post.likes?.includes(user)
-                            ? "size-6 stroke-red-700 fill-red-700"
-                            : "size-6 stroke-black",
-                        }}
-                      />
+                      <LikePost post={post.post} like="page-post-like" />
                       {post.post.likes.length > 0 && post.post.likes.length}
                     </div>
                     <div className="flex gap-1">
                       <Repost
-                        postID={`${post.post._id}`}
+                        post={post.post}
                         repost="page-post-repost"
-                        reposted={{
-                          reposted: post.post.reposts?.includes(user)
-                            ? "size-6 stroke-purple-500 stroke-2"
-                            : "size-6 stroke-black stroke-2",
-                        }}
                         qKey="pageposts"
                       />
                       {post.post.reposts.length > 0 && post.post.reposts.length}
                     </div>
                     <div className="flex gap-1">
                       <SavePost
-                        postID={`${post.post._id}`}
+                        post={post.post}
                         bookmark="page-post-bookmark"
-                        booked={{
-                          booked: post.post?.bookmark.includes(user)
-                            ? "size-6 stroke-green-700 fill-green-700 stroke-2"
-                            : "size-6 stroke-black stroke-2",
-                        }}
                         qKey="pageposts"
                       />
                       {post.post?.bookmark.length > 0 &&

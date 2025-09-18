@@ -15,7 +15,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 const ChurchPost = () => {
   const { ref, inView } = useInView();
   const { church } = useParams();
-  const user = localStorage.getItem("user");
 
   const fetchPosts = async ({ pageParam }) => {
     return await api.get(
@@ -31,7 +30,7 @@ const ChurchPost = () => {
     isFetchingNextPage,
     error,
   } = useInfiniteQuery({
-    queryKey: ["pageposts"],
+    queryKey: ["pageposts", church],
     queryFn: fetchPosts,
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
@@ -100,40 +99,21 @@ const ChurchPost = () => {
               </div>
 
               <div className="flex gap-1">
-                <LikePost
-                  postID={`${post._id}`}
-                  like="page-post-like"
-                  liked={{
-                    liked: post.likes?.find((id) => id === user)
-                      ? "size-6 stroke-red-700 fill-red-700"
-                      : "size-6 stroke-black",
-                  }}
-                  qKey="pageposts"
-                />
+                <LikePost post={post} like="page-post-like" qKey="pageposts" />
                 {post.likes.length > 0 && post.likes.length}
               </div>
               <div className="flex gap-1">
                 <Repost
-                  postID={`${post._id}`}
+                  post={post}
                   repost="page-post-repost"
-                  reposted={{
-                    reposted: post.reposts?.find((id) => id === user)
-                      ? "size-6 stroke-purple-500 stroke-2"
-                      : "size-6 stroke-black stroke-2",
-                  }}
                   qKey="pageposts"
                 />
                 {post.reposts.length > 0 && post.reposts.length}
               </div>
               <div className="flex gap-1">
                 <SavePost
-                  postID={`${post._id}`}
+                  post={post}
                   bookmark="page-post-bookmark"
-                  booked={{
-                    booked: post?.bookmark.includes(user)
-                      ? "size-6 stroke-green-700 fill-green-700 stroke-2"
-                      : "size-6 stroke-black stroke-2",
-                  }}
                   qKey="pageposts"
                 />
                 {post?.bookmark.length > 0 && post?.bookmark.length}

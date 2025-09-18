@@ -15,7 +15,7 @@ import SavePost from "@/component/SavePost";
 
 const Post = () => {
   const { ref, inView } = useInView();
-  const user = localStorage.getItem("user");
+
   const fetchPosts = async ({ pageParam }) => {
     return await api.get(`/my-posts?page=${pageParam}&limit=4`);
   };
@@ -109,47 +109,17 @@ const Post = () => {
                   </div>
 
                   <div className="flex gap-1">
-                    <LikePost
-                      postID={`${post._id}`}
-                      like="like"
-                      unlike="unlike"
-                      liked={{
-                        liked: post.likes?.includes(user)
-                          ? "size-6 stroke-red-400 fill-red-400"
-                          : "size-6 stroke-black",
-                      }}
-                      qKey="posts"
-                    />
+                    <LikePost post={post} like="like" qKey="posts" />
                     {post.likes.length > 0 && post.likes.length}
                   </div>
 
                   <div className="flex gap-1">
-                    <Repost
-                      postID={`${post._id}`}
-                      repost="repost"
-                      unrepost="unrepost"
-                      reposted={{
-                        reposted: post.reposts.includes(user)
-                          ? "size-6 stroke-purple-500 stroke-2"
-                          : "size-6 stroke-black stroke-2",
-                      }}
-                      qKey="posts"
-                    />
+                    <Repost post={post} repost="repost" qKey="posts" />
                     {post.reposts.length > 0 && post.reposts.length}
                   </div>
 
                   <div className="flex gap-1">
-                    <SavePost
-                      postID={`${post._id}`}
-                      bookmark="bookmark"
-                      unbookmark="unbookmark"
-                      booked={{
-                        booked: post?.bookmark.includes(user)
-                          ? "size-6 stroke-green-700 fill-green-700 stroke-2"
-                          : "size-6 stroke-black stroke-2",
-                      }}
-                      qKey="posts"
-                    />
+                    <SavePost post={post} bookmark="bookmark" qKey="posts" />
                     {post?.bookmark.length > 0 && post?.bookmark.length}
                   </div>
                 </div>

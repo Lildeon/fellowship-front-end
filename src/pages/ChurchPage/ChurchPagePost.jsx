@@ -15,7 +15,7 @@ import { useInView } from "react-intersection-observer";
 
 const ChurchPagePost = () => {
   const { id } = useParams();
-  const user = localStorage.getItem("user");
+
   const { ref, inView } = useInView();
 
   const fetchPosts = async ({ pageParam }) => {
@@ -30,7 +30,7 @@ const ChurchPagePost = () => {
     isFetchingNextPage,
     error,
   } = useInfiniteQuery({
-    queryKey: ["pageposts"],
+    queryKey: ["pageposts", id],
     queryFn: fetchPosts,
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
@@ -106,39 +106,15 @@ const ChurchPagePost = () => {
               </div>
 
               <div className="flex gap-1">
-                <LikePost
-                  postID={`${post._id}`}
-                  like="page-post-like"
-                  liked={{
-                    liked: post.likes?.find((id) => id === user)
-                      ? "size-6 stroke-red-700 fill-red-700"
-                      : "size-6 stroke-black",
-                  }}
-                />
+                <LikePost post={post} like="page-post-like" />
                 {post.likes.length > 0 && post.likes.length}
               </div>
               <div className="flex gap-1">
-                <Repost
-                  postID={`${post._id}`}
-                  repost="page-post-repost"
-                  reposted={{
-                    reposted: post.reposts?.find((id) => id === user)
-                      ? "size-6 stroke-purple-500 stroke-2"
-                      : "size-6 stroke-black stroke-2",
-                  }}
-                />
+                <Repost post={post} repost="page-post-repost" />
                 {post.reposts.length > 0 && post.reposts.length}
               </div>
               <div className="flex gap-1">
-                <SavePost
-                  postID={`${post._id}`}
-                  bookmark="page-post-bookmark"
-                  booked={{
-                    booked: post?.bookmark.includes(user)
-                      ? "size-6 stroke-green-700 fill-green-700 stroke-2"
-                      : "size-6 stroke-black stroke-2",
-                  }}
-                />
+                <SavePost post={post} bookmark="page-post-bookmark" />
                 {post?.bookmark.length > 0 && post?.bookmark.length}
               </div>
             </div>

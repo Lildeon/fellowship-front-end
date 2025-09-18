@@ -10,7 +10,6 @@ import { LazyAutoPauseVideo } from "./LazyPost";
 import { poster } from "./poster";
 
 const PostCard = ({ post }) => {
-  const user = localStorage.getItem("user");
   return (
     <div className="flex border-b border-r border-r-gray-100 hover:bg-zinc-50 px-4 py-3">
       <div className="mr-2.5">
@@ -53,44 +52,17 @@ const PostCard = ({ post }) => {
           </div>
 
           <div className="flex gap-1 grow">
-            <LikePost
-              postID={`${post?._id}`}
-              like="like"
-              liked={{
-                liked: post?.likes.includes(user)
-                  ? "size-6 stroke-red-700 fill-red-700"
-                  : "size-6 stroke-black",
-              }}
-              qKey="posts"
-            />
+            <LikePost post={post} like="like" qKey={"posts"} />
             {post?.likes.length > 0 && post?.likes.length}
           </div>
 
           <div className="flex gap-1 ">
-            <Repost
-              postID={`${post?._id}`}
-              repost="repost"
-              reposted={{
-                reposted: post?.reposts.includes(user)
-                  ? "size-6 stroke-purple-500 stroke-2"
-                  : "size-6 stroke-black stroke-2",
-              }}
-              qKey="posts"
-            />
+            <Repost post={post} repost="repost" qKey={"posts"} />
             {post?.reposts.length > 0 && post?.reposts.length}
           </div>
 
           <div className="flex gap-1 ">
-            <SavePost
-              postID={`${post?._id}`}
-              bookmark="bookmark"
-              booked={{
-                booked: post?.bookmark.includes(user)
-                  ? "size-6 stroke-green-700 fill-green-700 stroke-2"
-                  : "size-6 stroke-black stroke-2",
-              }}
-              qKey="posts"
-            />
+            <SavePost post={post} bookmark="bookmark" qKey={"posts"} />
             {post?.bookmark.length > 0 && post?.bookmark.length}
           </div>
         </div>

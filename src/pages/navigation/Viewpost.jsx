@@ -17,10 +17,8 @@ const People = lazy(() => import("@/component/People"));
 const Viewpost = () => {
   let params = useParams();
 
-  const user = localStorage.getItem("user");
-
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["posts", params.id],
+    queryKey: ["posts", "view", params.id],
     queryFn: async () => {
       return api.get(`view/${params.id}`);
     },
@@ -88,45 +86,19 @@ const Viewpost = () => {
                 </div>
 
                 <div className="flex gap-1">
-                  <LikePost
-                    postID={`${data?.data._id}`}
-                    like="like"
-                    unlike="unlike"
-                    liked={{
-                      liked: data?.data.likes?.includes(user)
-                        ? "size-6 stroke-red-700 fill-red-700"
-                        : "size-6 stroke-black",
-                    }}
-                    qKey="posts"
-                  />
+                  <LikePost post={data?.data} like="like" qKey="posts" />
                   {data?.data.likes?.length > 0 && data?.data.likes?.length}
                 </div>
 
                 <div className="flex gap-1">
-                  <Repost
-                    postID={`${data?.data._id}`}
-                    repost="repost"
-                    unrepost="unrepost"
-                    reposted={{
-                      reposted: data?.data.reposts?.includes(user)
-                        ? "size-6 stroke-purple-500 stroke-2"
-                        : "size-6 stroke-black stroke-2",
-                    }}
-                    qKey="posts"
-                  />
+                  <Repost post={data?.data} repost="repost" qKey="posts" />
                   {data?.data.reposts?.length > 0 && data?.data.reposts?.length}
                 </div>
 
                 <div className="flex gap-1">
                   <SavePost
-                    postID={`${data?.data._id}`}
+                    post={data?.data}
                     bookmark="bookmark"
-                    unbookmark="unbookmark"
-                    booked={{
-                      booked: data?.data.bookmark?.includes(user)
-                        ? "size-6 stroke-green-700 fill-green-700 stroke-2"
-                        : "size-6 stroke-black stroke-2",
-                    }}
                     qKey="posts"
                   />
                   {data?.data?.bookmark?.length > 0 &&

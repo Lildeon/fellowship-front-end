@@ -2,12 +2,12 @@
 import api from "@/services/axios";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 
-const SavePost = ({ postID, bookmark, booked, qKey }) => {
+const SavePost = ({ post, bookmark, qKey }) => {
   const user = localStorage.getItem("user");
   const queryClient = useQueryClient();
 
   const handleBookmark = async () => {
-    await api.post(`${bookmark}/${postID}`);
+    await api.post(`${bookmark}/${post._id}`);
   };
 
   const mutation = useMutation({
@@ -50,19 +50,25 @@ const SavePost = ({ postID, bookmark, booked, qKey }) => {
 
     onSettled: () => {
       // refetch to sync with server
-      queryClient.invalidateQueries([qKey]);
+      queryClient.invalidateQueries([qKey], {
+        refetchType: "inactive",
+      });
     },
   });
 
   return (
-    <div onClick={() => mutation.mutate(postID)} className="flex gap-2">
+    <div onClick={() => mutation.mutate(post._id)} className="flex gap-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className={booked.booked ? booked?.booked : booked?.booked}
+        className={
+          post?.bookmark.includes(user)
+            ? "size-6 stroke-green-700 fill-green-700 stroke-2"
+            : "size-6 stroke-black stroke-2"
+        }
       >
         <path
           strokeLinecap="round"
