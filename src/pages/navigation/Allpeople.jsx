@@ -22,17 +22,16 @@ const Allpeople = () => {
     error,
   } = useInfiniteQuery({
     queryKey: ["allpeople"],
-    queryFn: async () => {
-      return await api.get("people-all");
+    queryFn: async ({ pageParam }) => {
+      return await api.get(`people-all?page=${pageParam}&limit=4`);
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
-      console.log({ lastPage: lastPage, pages: pages });
       const nextPage = lastPage.data.hasMore ? pages.length + 1 : undefined;
       return nextPage;
     },
   });
-  console.log({ people: data });
+
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
@@ -55,7 +54,7 @@ const Allpeople = () => {
       {data?.pages.map((group, i) => (
         <React.Fragment key={i}>
           <div className="grid grid-cols-1 md:grid-cols-2 mt-2">
-            {group.data?.map((pupil, i) => (
+            {group.data?.people.map((pupil, i) => (
               <div key={i} className="flex gap-2.5 px-4 py-3">
                 <Link to={`/user/${pupil._id}/post`} className="">
                   <Avater src={pupil?.userPhotoUrl} />
@@ -68,24 +67,7 @@ const Allpeople = () => {
                     >
                       {pupil.username}
                     </Link>
-                    <div>
-                      {pupil._id !== user && (
-                        <Follow
-                          userId={`${pupil._id}`}
-                          followed={{
-                            followed: pupil?.follower.includes(user) ? (
-                              <p className="px-5 py-1 h-fit w-28 rounded-2xl border">
-                                following
-                              </p>
-                            ) : (
-                              <p className="px-5 py-1 h-fit w-28 rounded-2xl bg-black text-white">
-                                follow
-                              </p>
-                            ),
-                          }}
-                        />
-                      )}
-                    </div>
+                    <div>{pupil._id !== user && <Follow user={pupil} />}</div>
                   </div>
 
                   <p className="line-clamp-6">{pupil.bio}</p>
@@ -108,7 +90,7 @@ const Allpeople = () => {
           ) : hasNextPage ? (
             "Load More"
           ) : (
-            "No more user"
+            "All users"
           )}
         </button>
       </div>
