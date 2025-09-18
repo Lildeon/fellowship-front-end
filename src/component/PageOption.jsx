@@ -93,7 +93,8 @@ export const DeletePage = ({ Id, url, navigate }) => {
 export const NewAdmin = ({ admin, Id }) => {
   const [email, setEmail] = useState("");
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     await api.post(`${admin}/${Id}`, { email });
     setEmail("");
   };
@@ -105,7 +106,7 @@ export const NewAdmin = ({ admin, Id }) => {
           <DialogTitle>User Email Address</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        <form action={handleSubmit} className="flex">
+        <form onSubmit={handleSubmit} className="flex">
           <input
             type="email"
             name="email"
@@ -123,7 +124,8 @@ export const NewAdmin = ({ admin, Id }) => {
 };
 export const RemoveAdmin = ({ remove, Id }) => {
   const [email, setEmail] = useState("");
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     await api.put(`${remove}/${Id}`, {
       email,
     });
@@ -136,7 +138,7 @@ export const RemoveAdmin = ({ remove, Id }) => {
           <DialogTitle>User Email Address</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        <form action={handleSubmit} className="flex">
+        <form onSubmit={handleSubmit} className="flex">
           <input
             type="email"
             name="email"
