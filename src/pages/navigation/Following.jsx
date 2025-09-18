@@ -1,73 +1,96 @@
 import { Link, useParams } from "react-router";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Follow from "@/component/Follow";
 import api from "@/services/axios";
 import Avater from "@/component/Avater";
+import { Feedloader } from "@/component/Loader";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
 
 const Following = () => {
-  const [following, setFolllowing] = useState([]);
   const { id } = useParams();
   const user = localStorage.getItem("user");
-  const [toggle, setToggle] = useState(false);
 
-  const Toggle = () => setToggle(!toggle);
+  const { ref, inView } = useInView();
 
+  const {
+    data,
+    status,
+    fetchNextPage,
+    isFetching,
+    hasNextPage,
+    isFetchingNextPage,
+    error,
+  } = useInfiniteQuery({
+    queryKey: ["following", id],
+    queryFn: async ({ pageParam }) => {
+      return await api.get(`following/${id}?page=${pageParam}&limit=4`);
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) => {
+      const nextPage = lastPage.data.hasMore ? pages.length + 1 : undefined;
+      return nextPage;
+    },
+  });
+  const following = data?.pages.flatMap((page) => page.data.following) || [];
   useEffect(() => {
-    api.get(`following/${id}`).then((res) => setFolllowing(res.data));
-  }, [toggle, id]);
-
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage, hasNextPage]);
+  if (status === "pending") {
+    return (
+      <div className="flex justify-center text-xl font-medium">
+        <Feedloader />
+      </div>
+    );
+  } else if (status === "error") {
+    return <p>Error: {error.message}</p>;
+  }
   return (
     <div>
-      {following.length > 0 &&
-        following.map((myfollowing) => (
-          <div
-            key={myfollowing._id}
-            className="flex gap-2.5 border-b border-r px-4 py-3"
-          >
-            <Avater src={myfollowing?.userPhotoUrl} />
+      {following.map((myfollowing) => (
+        <div
+          key={myfollowing._id}
+          className="flex gap-2.5 border-b border-r px-4 py-3"
+        >
+          <Avater src={myfollowing?.userPhotoUrl} />
 
-            <div className="w-full">
-              <div className="flex justify-between">
-                <Link
-                  to={`/user/${myfollowing._id}/post`}
-                  className="text-lg font-medium"
-                >
-                  {myfollowing.username}
-                </Link>
-
-                <div>
-                  {myfollowing._id !== user && (
-                    <Follow
-                      userId={`${myfollowing._id}`}
-                      followed={{
-                        followed: myfollowing?.follower.includes(user) ? (
-                          <p
-                            className="px-5 py-1 h-fit w-28
-    rounded-2xl border"
-                          >
-                            following
-                          </p>
-                        ) : (
-                          <p
-                            className="px-5 py-1 h-fit w-28
-    rounded-2xl bg-black text-white"
-                          >
-                            follow
-                          </p>
-                        ),
-                      }}
-                      onToggle={Toggle}
-                    />
-                  )}
-                </div>
-              </div>
-              <Link to={`/user/${myfollowing._id}/post`}>
-                {myfollowing.bio}
+          <div className="w-full">
+            <div className="flex justify-between">
+              <Link
+                to={`/user/${myfollowing._id}/post`}
+                className="text-lg font-medium"
+              >
+                {myfollowing.username}
               </Link>
+
+              <div>
+                {myfollowing._id !== user && <Follow user={myfollowing} />}
+              </div>
             </div>
+            <Link to={`/user/${myfollowing._id}/post`}>{myfollowing.bio}</Link>
           </div>
-        ))}
+        </div>
+      ))}
+      <div className="flex justify-center" ref={ref}>
+        <button
+          onClick={() => fetchNextPage()}
+          disabled={!hasNextPage || isFetchingNextPage}
+        >
+          {isFetchingNextPage ? (
+            <div>
+              <Feedloader />
+            </div>
+          ) : hasNextPage ? (
+            "Load More"
+          ) : (
+            "All following"
+          )}
+        </button>
+      </div>
+      <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
     </div>
   );
 };
