@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     localStorage.removeItem("user");
-    await axios.post("https://fellowship-backend.up.railway.app/logout", {
+    await axios.post("https://fellowship-backend.onrender.com/logout", {
       withCredentials: true,
     });
     setUser(null);
